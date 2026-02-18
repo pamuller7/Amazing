@@ -31,6 +31,7 @@ class Maze:
 
     def print_maze(self, convert: str | None = None) -> None:
         if convert:
+            # affiche les valeurs du tableau
             if convert == "hex":
                 func = hex
             elif convert == "bin":
@@ -44,6 +45,7 @@ class Maze:
                         print("\t", end="")
                 print()
         else:
+            # affiche le tableau version joli
             print(" ")
             for _ in range(self.width):
                 print("__", end="")
@@ -79,6 +81,7 @@ class Maze:
                 and pos[1] < self.width and pos[1] >= 0)
 
     def put_in_maze(self, pos: list, value: int) -> None:
+        # casse le mur value a la position pos
         line = pos[0]
         col = pos[1]
         if (
@@ -88,6 +91,7 @@ class Maze:
             self.maze[line][col] = self.maze[line][col] & value
 
     def init_maze(self) -> None:
+        # init un maze que avec murs
         if self.width > 0 and self.height > 0:
             self.maze = [[0b1111 for _ in range(self.width)]
                          for _ in range(self.height)]
@@ -104,6 +108,7 @@ class Maze:
         )
 
     def cross_border(self, value: int, line: int, col: int):
+        # retourne true si on risque de traverser la limite
         if (value == self.north and line == 0):
             return (True)
         elif (value == self.south and line == self.height - 1):
@@ -119,6 +124,7 @@ class Maze:
         can_draw = self.can_draw_42()
         for line in range(self.height):
             for col in range(self.width):
+                # dessine le 42 pendant le parcours du tableau
                 if (
                     can_draw
                     and line >= int(self.height/2) - 3
@@ -129,7 +135,7 @@ class Maze:
                     [col - int(self.width/2) + 3] == 1
                 ):
                     self.maze[line][col] = 0b11111
-                    self.print_maze()
+                # choisist un nombre dedirection au hasard, casse les murs
                 else:
                     nb_dir = random.randrange(1, 3)
                     rand_dir_tab = self.dir.copy()
@@ -137,6 +143,7 @@ class Maze:
                     for i in range(nb_dir):
                         if not (self.cross_border(rand_dir_tab[i], line, col)):
                             self.put_in_maze([line, col], rand_dir_tab[i])
+                        # verifie que son voisin a bien le mur correspondant cassé 
                         if rand_dir_tab[i] == self.north:
                             if self.is_in_bound([line - 1, col]):
                                 self.put_in_maze([line - 1, col], self.south)
