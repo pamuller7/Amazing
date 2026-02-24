@@ -1,4 +1,3 @@
-import random
 from mlx import Mlx
 from typing import Any
 
@@ -8,9 +7,16 @@ class MazeError(Exception):
 
 
 class Maze:
-    def __init__(self, height: int, width: int,
-                 entry: list, exit: list,
-                 output_file: str, perfect: bool) -> None:
+    def __init__(
+        self,
+        height: int,
+        width: int,
+        entry: list,
+        exit: list,
+        output_file: str,
+        perfect: bool,
+        cell_size: int = 50,
+    ) -> None:
         self.width = width
         self.height = height
         self.entry = entry
@@ -57,10 +63,7 @@ class Maze:
 
         line = pos[0]
         col = pos[1]
-        if (
-            self.is_in_bound(pos)
-            and self.maze[line][col] < 0b11111
-        ):
+        if self.is_in_bound(pos) and self.maze[line][col] < 0b11111:
             self.maze[line][col] = self.maze[line][col] & value
 
     def init_maze(self) -> list[list[int]]:

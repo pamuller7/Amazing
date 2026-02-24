@@ -12,10 +12,10 @@ class Walker:
     No breaking outer walls
     """
 
-    def walk(self, maze: Maze) -> Tuple[Tuple[int,int], List[int]]:
+    def walk(self, maze: Maze) -> Tuple[Tuple[int, int], List[int]]:
         """"""
         if maze.height == 0 or maze.width == 0:
-            return ((0,0), [])
+            return ((0, 0), [])
         # todo reroll if in 42
         start_position: Tuple[int, int] = (
             int(random() * maze.width - 1),
