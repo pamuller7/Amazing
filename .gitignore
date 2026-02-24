@@ -1,4 +1,5 @@
 venv/
+.venv
 mlx_CLXV
 **__pycache__
 **mypy_cache
