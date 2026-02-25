@@ -1,3 +1,7 @@
-.venv
+venv/
 mlx_CLXV
-__pycache__
+**__pycache__
+**mypy_cache
+.installed
+dist/
+build/

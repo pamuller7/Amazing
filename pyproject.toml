@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling >= 1.26", "build==1.4.0", "flake8==7.3.0", "mypy==1.19.1"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["source"]
+
+
+[project]
+name = "mazegen"
+version = "0.0.1"
+authors = [
+  { name="pamuller", email="pamuller@example.com" },
+  { name="acercy", email="acercy@example.com" },
+]
+description = ""
+readme = "README.md"
+
+#[project.urls]
+#Homepage = ""
+#Issues = ""
+
+[tool.setuptools]
+package-dir = {"" = "source"}
+include-package-data = false
