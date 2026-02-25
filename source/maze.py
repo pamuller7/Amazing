@@ -1,4 +1,3 @@
-import random
 
 class MazeError(Exception):
     pass
@@ -16,9 +15,10 @@ class Maze:
         self.perfect = perfect
         self.maze: list = []
         self.north = 0b0111
-        self.west = 0b1011
+        self.east = 0b1011
         self.south = 0b1101
-        self.east = 0b1110
+        self.west = 0b1110
+        self.nb_cell_to_fill = width * height
         self.dir: list = [self.north,
                           self.west,
                           self.south,
@@ -29,12 +29,21 @@ class Maze:
                               [0, 0, 1, 0, 1, 0, 0],
                               [0, 0, 1, 0, 1, 1, 1]]
 
+        def check_open_area(self, pos: list):
+            i = pos[0]
+            j = pos[0]
+            if (
+                i > 0 and j > 0
+                and i < self.height - 1 and j < self.width - 1
+            ):
+                weigth_square = 0
+                for x in range(-1, 2):
+                    for y in range(-1, 2):
+                        weigth_square += self.maze[i+x][j+y]
+
     def print_maze(self, convert: str | None = None) -> None:
-        if convert:
-            # affiche les valeurs du tableau
-            if convert == "hex":
-                func = hex
-            elif convert == "bin":
+        if convert and convert != "yes" and convert != "hex":
+            if convert == "bin":
                 func = bin
             elif convert == "int":
                 func = int
@@ -44,44 +53,56 @@ class Maze:
                     if (cell) <= 15:
                         print("\t", end="")
                 print()
-        else:
-            # affiche le tableau version joli
-            print(" ")
-            for _ in range(self.width):
-                print("__", end="")
-            print()
+        elif convert == "hex":
+            hexa = ['0', '1', '2', '3', '4',
+                    '5', '6', '7', '8', '9',
+                    'A', 'B', 'C', 'D', 'E', 'F']
+            maze = [[] for _ in range(self.height + 1)]
             for line in range(self.height):
-                print("|", end="")
+                for col in range(self.width):
+                    maze[line].append(hexa[self.maze[line][col] % 16])
+            for line in maze:
+                for cell in line:
+                    print(cell, end="")
+                print()
+
+        else:
+            maze = [[] for _ in range(self.height + 1)]
+            # affiche le tableau version joli
+            maze[0].append(" ")
+            for i in range(self.width):
+                maze[0].append("__")
+            for line in range(1, self.height):
+                maze[line].append("|")
                 for col in range(self.width):
                     cell = self.maze[line][col]
-                    if line == self.entry[0] and col == self.entry[1]:
-                        print("S ", end="")
-                    elif cell == 0b11111:
-                        print("##", end="")
-                    elif line == self.exit[0] and col == self.exit[1]:
-                        print(" E", end="")
+                    if cell == 0b11111:
+                        maze[line].append("##")
+                    elif cell == 98:
+                        maze[line].append("++", end="")
                     else:
                         if (cell >> 1) & 1 == 1:
-                            print("_", end="")
+                            maze[line].append("_")
                         else:
-                            print(" ", end="")
-                        if cell & 1 == 1:
-                            print("|", end="")
+                            maze[line].append(" ")
+                        if cell >> 2 & 1 == 1:
+                            maze[line].append("|")
                         else:
                             if (cell >> 1) & 1 == 1:
-                                print("_", end="")
+                                maze[line].append("_")
                             else:
-                                print(" ", end="")
-                print()
-            print(" ", end="")
-            print()
+                                maze[line].append(" ")
+            if convert == "yes":
+                for line in maze:
+                    for cell in line:
+                        print(cell, end="")
+                    print()
 
     def is_in_bound(self, pos) -> bool:
         return (pos[0] < self.height and pos[0] >= 0
                 and pos[1] < self.width and pos[1] >= 0)
 
     def put_in_maze(self, pos: list, value: int) -> None:
-        # casse le mur value a la position pos
         line = pos[0]
         col = pos[1]
         if (
@@ -91,12 +112,23 @@ class Maze:
             self.maze[line][col] = self.maze[line][col] & value
 
     def init_maze(self) -> None:
-        # init un maze que avec murs
         if self.width > 0 and self.height > 0:
             self.maze = [[0b1111 for _ in range(self.width)]
                          for _ in range(self.height)]
-            self.put_in_maze(self.entry, 0b0000)
-            self.put_in_maze(self.exit, 0b0000)
+            can_draw = self.can_draw_42()
+            for line in range(self.height):
+                for col in range(self.width):
+                    if (
+                        can_draw
+                        and line >= int(self.height/2) - 3
+                        and line < len(self.drawing) + int(self.height/2) - 3
+                        and col >= int(self.width/2) - 3
+                        and col < len(self.drawing[0]) + int(self.width/2) - 3
+                        and self.drawing[line - int(self.height/2) + 3]
+                        [col - int(self.width/2) + 3] == 1
+                    ):
+                        self.maze[line][col] = 0b11111
+                        self.nb_cell_to_fill -= 1
         else:
             raise MazeError("Invalid information:\
  width and height must be > 0")
@@ -108,7 +140,6 @@ class Maze:
         )
 
     def cross_border(self, value: int, line: int, col: int):
-        # retourne true si on risque de traverser la limite
         if (value == self.north and line == 0):
             return (True)
         elif (value == self.south and line == self.height - 1):
@@ -120,39 +151,18 @@ class Maze:
         else:
             return (False)
 
-    def draw_maze(self) -> None:
-        can_draw = self.can_draw_42()
-        for line in range(self.height):
-            for col in range(self.width):
-                # dessine le 42 pendant le parcours du tableau
-                if (
-                    can_draw
-                    and line >= int(self.height/2) - 3
-                    and line < len(self.drawing) + int(self.height/2) - 3
-                    and col >= int(self.width/2) - 3
-                    and col < len(self.drawing[0]) + int(self.width/2) - 3
-                    and self.drawing[line - int(self.height/2) + 3]
-                    [col - int(self.width/2) + 3] == 1
-                ):
-                    self.maze[line][col] = 0b11111
-                # choisist un nombre dedirection au hasard, casse les murs
-                else:
-                    nb_dir = random.randrange(1, 3)
-                    rand_dir_tab = self.dir.copy()
-                    random.shuffle(rand_dir_tab)
-                    for i in range(nb_dir):
-                        if not (self.cross_border(rand_dir_tab[i], line, col)):
-                            self.put_in_maze([line, col], rand_dir_tab[i])
-                        # verifie que son voisin a bien le mur correspondant cassé 
-                        if rand_dir_tab[i] == self.north:
-                            if self.is_in_bound([line - 1, col]):
-                                self.put_in_maze([line - 1, col], self.south)
-                        if rand_dir_tab[i] == self.south:
-                            if self.is_in_bound([line + 1, col]):
-                                self.put_in_maze([line + 1, col], self.north)
-                        if rand_dir_tab[i] == self.west:
-                            if self.is_in_bound([line, col - 1]):
-                                self.put_in_maze([line, col - 1], self.east)
-                        if rand_dir_tab[i] == self.east:
-                            if self.is_in_bound([line, col + 1]):
-                                self.put_in_maze([line, col + 1], self.west)
+    def open_wall_is(self, pos: list) -> list:
+        i = pos[0]
+        j = pos[1]
+        open_path = []
+        if self.maze[i][j] == 98:
+            return (open_path)
+        if self.maze[i][j] & 1 == 0:
+            open_path.append(self.west)
+        if self.maze[i][j] >> 1 & 1 == 0:
+            open_path.append(self.south)
+        if self.maze[i][j] >> 2 & 1 == 0:
+            open_path.append(self.east)
+        if self.maze[i][j] >> 3 & 1 == 0:
+            open_path.append(self.north)
+        return (open_path)
