@@ -6,8 +6,8 @@ class Walker:
     def __init__(self, maze: Maze, start: list):
         self.maze = maze
         self.start = start
-        self.pos_line = start[0]
-        self.pos_col = start[1]
+        self.pos_line = 0
+        self.pos_col = 0
         self.line_checked = 0
         self.nb_cell_to_fill: int = self.maze.nb_cell_to_fill
 
@@ -22,6 +22,20 @@ class Walker:
             try_pos = [pos[0], pos[1] - 1]
         return (self.maze.is_in_bound(try_pos)
                 and self.maze.maze[try_pos[0]][try_pos[1]] == 0b1111)
+
+    def loop_the_path(self, wall_to_open: int, pos: list) -> bool:
+        try_pos = None
+        if wall_to_open == self.maze.north and self.maze.maze[pos[0]][pos[1]] >> 3 & 1 == 1:
+            try_pos = [pos[0] - 1, pos[1]]
+        elif wall_to_open == self.maze.east and self.maze.maze[pos[0]][pos[1]] >> 2 & 1 == 1:
+            try_pos = [pos[0], pos[1] + 1]
+        elif wall_to_open == self.maze.south and self.maze.maze[pos[0]][pos[1]] >> 1 & 1 == 1:
+            try_pos = [pos[0] + 1, pos[1]]
+        elif wall_to_open == self.maze.west and self.maze.maze[pos[0]][pos[1]] & 1 == 1:
+            try_pos = [pos[0], pos[1] - 1]
+        if not try_pos:
+            return (False)
+        return (self.maze.is_in_bound(try_pos))
 
     def update_dir(self, way_to_open: int):
         if way_to_open == self.maze.north:
@@ -54,7 +68,7 @@ class Walker:
 
     def draw_path(self, pos_from: list):
         path_length = 0
-        possible_ways = [x for x in self.maze.dir 
+        possible_ways = [x for x in self.maze.dir
                          if self.is_a_possible_way(
                              x, [self.pos_line, self.pos_col])]
         while possible_ways:
@@ -65,6 +79,13 @@ class Walker:
                              if self.is_a_possible_way(
                                  x, [self.pos_line, self.pos_col])]
             path_length += 1
+        if not self.maze.perfect:
+            possible_ways = [x for x in self.maze.dir
+                             if self.loop_the_path(
+                                 x, [self.pos_line, self.pos_col])]
+            try_way = random.choice(possible_ways)
+            self.maze.put_in_maze([self.pos_line, self.pos_col], try_way)
+
         return (path_length)
 
     def find_incomplete_cell(self, pos):
@@ -83,6 +104,8 @@ class Walker:
             self.line_checked = i + 1
 
     def walk_and_fill(self):
+        import time
+        x = time.time()
         if self.nb_cell_to_fill == 0:
             return
         self.pos_line = 0
@@ -100,3 +123,4 @@ class Walker:
                 self.pos_col = last_check_pos[1]
             else:
                 self.draw_path([self.pos_line, self.pos_col])
+        print(time.time() - x)

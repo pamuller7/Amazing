@@ -50,8 +50,6 @@ class Maze:
             for col in self.maze:
                 for cell in col:
                     print(func(cell), end="\t")
-                    if (cell) <= 15:
-                        print("\t", end="")
                 print()
         elif convert == "hex":
             hexa = ['0', '1', '2', '3', '4',
@@ -67,36 +65,32 @@ class Maze:
                 print()
 
         else:
-            maze = [[] for _ in range(self.height + 1)]
             # affiche le tableau version joli
-            maze[0].append(" ")
-            for i in range(self.width):
-                maze[0].append("__")
-            for line in range(1, self.height):
-                maze[line].append("|")
+            print(" ")
+            for _ in range(self.width):
+                print("__", end="")
+            print()
+            for line in range(self.height):
+                print("|", end="")
                 for col in range(self.width):
                     cell = self.maze[line][col]
                     if cell == 0b11111:
-                        maze[line].append("##")
-                    elif cell == 98:
-                        maze[line].append("++", end="")
+                        print("##", end="")
                     else:
                         if (cell >> 1) & 1 == 1:
-                            maze[line].append("_")
+                            print("_", end="")
                         else:
-                            maze[line].append(" ")
+                            print(" ", end="")
                         if cell >> 2 & 1 == 1:
-                            maze[line].append("|")
+                            print("|", end="")
                         else:
                             if (cell >> 1) & 1 == 1:
-                                maze[line].append("_")
+                                print("_", end="")
                             else:
-                                maze[line].append(" ")
-            if convert == "yes":
-                for line in maze:
-                    for cell in line:
-                        print(cell, end="")
-                    print()
+                                print(" ", end="")
+                print()
+            print(" ", end="")
+            print()
 
     def is_in_bound(self, pos) -> bool:
         return (pos[0] < self.height and pos[0] >= 0

@@ -1,21 +1,27 @@
 from source.maze import Maze
 from source.walker_pa import Walker
+from source.find_way import SolveMaze
+import time
 import random
 
-test = Maze(10, 10, [80, 80], [90, 90], "test", False)
+test = Maze(10, 10, [0, 0], [9,9], "test", False)
 test.init_maze()
 test.print_maze("yes")
-# test.print_maze("bin")
 walk = Walker(test, [0,0])
 
 print("here")
 walk.walk_and_fill()
-test.print_maze("hex")
+test.print_maze()
+solvmaze = SolveMaze(test, walk)
+x = time.time()
+print(solvmaze.get_path())
+print(time.time() - x)
+
 
 for i in range( test.height):
-	for j in range(test.width):
-		if test.maze[i][j] == 0b1111:
-			print(f"ERROR MAZE[{i}][{j}]")
+    for j in range(test.width):
+        if test.maze[i][j] == 0b1111:
+            print(f"ERROR MAZE[{i}][{j}]")
 
 
 # def travel_in():
