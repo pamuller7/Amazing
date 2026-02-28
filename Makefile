@@ -20,8 +20,6 @@ clean:
 	-rm .mypy_cache -r
 	-rm venv -r
 	-rm dist -r
-	-rm source/mazegen.egg-info/ -r
-	-rm build -r
 
 lint: install
 	-./venv/bin/python3 -m flake8 source/ main.py 
@@ -29,8 +27,6 @@ lint: install
 
 build: install
 	./venv/bin/python3 -m build --wheel --outdir dist/
-	-rm source/mazegen.egg-info/ -r
-	-rm build -r
 
 lint-strict: install
 	-./venv/bin/python3 -m flake8 source/ main.py
