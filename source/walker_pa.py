@@ -168,5 +168,4 @@ class Walker:
                 self.pos_col = last_check_pos[1]
             else:
                 self.draw_path()
-                print(self.nb_cell_to_fill)
-                print(self.maze.print_maze())
+                # print(self.maze.print_maze())

@@ -64,6 +64,8 @@ class Maze:
         possible draw the given drawing in the middle of the maze
         returns the maze created (a matrix (height, width))'''
 
+        line_draw = len(self.drawing)
+        col_draw = len(self.drawing[0])
         if self.width > 0 and self.height > 0:
             maze = [[0b1111 for _ in range(self.width)]
                     for _ in range(self.height)]
@@ -72,12 +74,12 @@ class Maze:
                 for col in range(self.width):
                     if (
                         can_draw
-                        and line >= int(self.height/2) - 3
-                        and line < len(self.drawing) + int(self.height/2) - 3
-                        and col >= int(self.width/2) - 3
-                        and col < len(self.drawing[0]) + int(self.width/2) - 3
-                        and self.drawing[line - int(self.height/2) + 3]
-                        [col - int(self.width/2) + 3] == 1
+                        and line >= int(self.height/2 - line_draw/2)
+                        and line < line_draw + int(self.height/2 - line_draw/2)
+                        and col >= int(self.width/2 - col_draw/2)
+                        and col < col_draw + int(self.width/2 - col_draw/2)
+                        and self.drawing[line - int(self.height/2 + line_draw - line_draw/2)]
+                        [col - int(self.width/2 + col_draw - col_draw/2)] == 1
                     ):
                         maze[line][col] = 0b11111
                         self.nb_cell_to_fill -= 1
@@ -90,8 +92,8 @@ class Maze:
         '''checks if the maze is tall enough to draw the drawing'''
 
         return (
-            len(self.drawing) <= self.height
-            and len(self.drawing[0]) <= self.width
+            len(self.drawing) <= self.height - 2
+            and len(self.drawing[0]) <= self.width - 2
         )
  
     def print_maze(self, convert: str | None = None) -> str:
