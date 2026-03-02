@@ -94,10 +94,8 @@ class Maze:
                         maze[line][col] = 0b11111
                         self.nb_cell_to_fill -= 1
         else:
-            raise MazeError(
-                "Invalid information:\
- width and height must be > 0"
-            )
+            raise MazeError("Invalid information:\
+ width and height must be > 0")
         return maze
 
     def can_draw_42(self) -> bool:

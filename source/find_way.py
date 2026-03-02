@@ -13,9 +13,9 @@ class SolveMaze:
         self.is_in_bound = self.maze.is_in_bound
 
     def travel_in_maze(self, dir: int) -> None:
-        '''Take an int (north 0b0111, south 0b1101 etc...) and change the pos
+        """Take an int (north 0b0111, south 0b1101 etc...) and change the pos
         of self
-            dir: int = direction (north, south etc...)'''
+            dir: int = direction (north, south etc...)"""
 
         if dir == self.maze.north:
             self.pos_line -= 1
@@ -27,9 +27,9 @@ class SolveMaze:
             self.pos_col += 1
 
     def decomp_cell(self, cell: int) -> list:
-        '''tells which walls of the current cell is open
-            cell: int = an argument of the maze (ex: maze[line][col])
-            --> Usefull to know wich way is open and ok to moove'''
+        """tells which walls of the current cell is open
+        cell: int = an argument of the maze (ex: maze[line][col])
+        --> Usefull to know wich way is open and ok to moove"""
 
         cell_open = []
         if cell & 1 == 0:
@@ -40,15 +40,19 @@ class SolveMaze:
             cell_open.append(self.maze.south)
         if cell >> 3 & 1 == 0:
             cell_open.append(self.maze.west)
-        return (cell_open)
+        return cell_open
 
     def djikstra_matrix(self) -> list[list[int]]:
-        '''Create a new matrix, describing the distance of maze's cell
-        from the exit.'''
+        """Create a new matrix, describing the distance of maze's cell
+        from the exit."""
 
-        mat_star = [[self.maze.width * self.maze.height
-                     for _ in range(self.maze.width)]
-                    for _ in range(self.maze.height)]
+        mat_star = [
+            [
+                self.maze.width * self.maze.height
+                for _ in range(self.maze.width)
+            ]
+            for _ in range(self.maze.height)
+        ]
         self.pos_line = self.exit[0]
         self.pos_col = self.exit[1]
         count = 0
@@ -57,8 +61,9 @@ class SolveMaze:
         for cell in cell_to_explore:
             [self.pos_line, self.pos_col] = cell
             count = mat_star[self.pos_line][self.pos_col] + 1
-            avb_pos = self.decomp_cell(self.maze.maze
-                                       [self.pos_line][self.pos_col])
+            avb_pos = self.decomp_cell(
+                self.maze.maze[self.pos_line][self.pos_col]
+            )
             for try_dir in avb_pos:
                 old_dir = [self.pos_line, self.pos_col]
                 self.travel_in_maze(try_dir)
@@ -66,11 +71,11 @@ class SolveMaze:
                     mat_star[self.pos_line][self.pos_col] = count
                     cell_to_explore.append([self.pos_line, self.pos_col])
                 [self.pos_line, self.pos_col] = old_dir
-        return (mat_star)
+        return mat_star
 
     def output_shortest_way(self) -> str:
-        '''Travel in the matrix created by the djikstra algo, and output the
-        direction taken by the solver to link the entry to the exit.'''
+        """Travel in the matrix created by the djikstra algo, and output the
+        direction taken by the solver to link the entry to the exit."""
 
         mat_star = self.djikstra_matrix()
         way = ""
@@ -78,22 +83,23 @@ class SolveMaze:
         self.pos_col = self.entry[1]
         init = mat_star[self.pos_line][self.pos_col]
         while init != 0:
-            avb_pos = self.decomp_cell(self.maze.maze
-                                       [self.pos_line][self.pos_col])
+            avb_pos = self.decomp_cell(
+                self.maze.maze[self.pos_line][self.pos_col]
+            )
             for try_dir in avb_pos:
                 old_dir = [self.pos_line, self.pos_col]
                 self.travel_in_maze(try_dir)
                 if mat_star[self.pos_line][self.pos_col] == init - 1:
                     if try_dir == self.maze.north:
-                        way += 'N'
+                        way += "N"
                     if try_dir == self.maze.south:
-                        way += 'S'
+                        way += "S"
                     if try_dir == self.maze.east:
-                        way += 'E'
+                        way += "E"
                     if try_dir == self.maze.west:
-                        way += 'W'
+                        way += "W"
                     init = mat_star[self.pos_line][self.pos_col]
                     break
                 else:
                     [self.pos_line, self.pos_col] = old_dir
-        return (way)
+        return way
