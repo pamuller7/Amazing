@@ -19,6 +19,8 @@ class CheckedResult(BaseModel):
             self.entry
         ) or not self.assert_is_in_bound(self.exit):
             raise ValueError("Not in bounds")
+        if self.entry == self.exit:
+            raise ValueError("Entry and Exit must be different")
         return self
 
     def assert_is_in_bound(self, pos: Tuple[int, int]):

@@ -1,11 +1,21 @@
 from mlx import Mlx
 from typing import Any
 from vector2 import Vector2
+from enum import Enum
 
 
 class MazeError(Exception):
     pass
 
+
+class Colors(Enum):
+    PURPULE = '\033[95m'
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
 
 class Maze:
     def __init__(
@@ -191,8 +201,12 @@ class Maze:
                     ]
                     == 1
                 ):
+                    if [line, col] == self.entry:
+                        raise ValueError("Entry can't be in the 42 pattern")
+                    if [line, col] == self.exit:
+                        raise ValueError("Exit can't be in the 42 pattern")
                     self.maze[line][col] = 0b11111
-                # choisist un nombre dedirection au hasard, casse les murs
+                # choisist un nombre de direction au hasard, casse les murs
         # walker = Walker()
         # walker.walk()
 
