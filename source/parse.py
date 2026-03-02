@@ -1,5 +1,33 @@
-from typing import Tuple, Any
+from typing import Tuple, Any, Optional
+from typing_extensions import Self
 from abc import ABC, abstractmethod
+from pydantic import BaseModel, Field, model_validator, ValidationError
+
+
+class CheckedResult(BaseModel):
+    width: int = Field(ge=2, le=10_000)
+    height: int = Field(ge=2, le=10_000)
+    entry: Tuple[int, int]
+    exit: Tuple[int, int]
+    output_file: str
+    perfect: bool
+    seed: Optional[str]
+
+    @model_validator(mode="after")
+    def entry_must_be_in_bound(self) -> Self:
+        if not self.assert_is_in_bound(
+            self.entry
+        ) or not self.assert_is_in_bound(self.exit):
+            raise ValueError("Not in bounds")
+        return self
+
+    def assert_is_in_bound(self, pos: Tuple[int, int]):
+        return (
+            pos[0] >= 0
+            and pos[0] < self.width
+            and pos[1] >= 0
+            and pos[1] < self.height
+        )
 
 
 class ParseResult:
@@ -9,7 +37,7 @@ class ParseResult:
     exit: Tuple[int, int]
     output_file: str
     perfect: bool
-    seed: None | str
+    seed: Optional[str]
 
     def __init__(self) -> None:
         self.seed = None
@@ -167,7 +195,6 @@ class Parser:
                 "\n".join(map(str, errors)) + sep + "\n".join(leftover)
             )
         pr = ParseResult()
-        print(str(pr))
         for k in results:
             k.apply(pr)
-        return pr
+        return CheckedResult(**pr.__dict__)
