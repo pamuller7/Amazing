@@ -35,11 +35,11 @@ class Maze:
         output_file: str,
         perfect: bool,
         seed: Optional[int],
-        anim_generation: Optional[bool] = True,
-        anim_resolution: Optional[bool] = True
+        animate_generation: Optional[bool] = False,
+        animate_shortest_way: Optional[bool] = False
     ) -> None:
-        self.anim_gen = anim_generation
-        self.anim_res = anim_resolution
+        self.anim_gen = animate_generation
+        self.anim_res = animate_shortest_way
         self.seed = seed
         self.width = width
         self.height = height
@@ -244,4 +244,4 @@ class Maze:
     def print_maze_on_terminal(self):
         print("\x1B[4l\x1B[;H")
         self.print_maze()
-        time.sleep(1 / (self.width * self.height))
+        time.sleep(1 / (max(self.height, self.width)))

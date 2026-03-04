@@ -145,6 +145,8 @@ class Parser:
     OUTPUT_FILE=<filename>
     PERFECT=True|False
     [SEED=<str>]
+    [ANIMATE_GENERATION=<bool>]
+    [ANIMATE_SHORTEST_WAY=<bool>]
     ```
     and parses it into a ParseResult.
 
@@ -163,6 +165,8 @@ class Parser:
             KeyParser("OUTPUT_FILE", IdentParser()),
             KeyParser("PERFECT", BoolParser()),
             OptKeyParser("SEED", IdentParser()),
+            OptKeyParser("ANIMATE_GENERATION", BoolParser()),
+            OptKeyParser("ANIMATE_SHORTEST_WAY", BoolParser()),
         ]
         errors = []
         results = []
@@ -184,7 +188,8 @@ class Parser:
                 if len(extractors) == 0:
                     errors.append(ParseError(i, "All keys were parsed"))
                 else:
-                    errors.append(ParseError(i, "key not recognized"))
+                    errors.append(ParseError(i, f"key '{line}' \
+not recognized"))
 
         def to_leftover_err(kp: KeyParser) -> str:
             return f"Key: {kp.key_name} was not found"
