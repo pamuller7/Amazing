@@ -12,8 +12,8 @@ class CheckedResult(BaseModel):
     output_file: str
     perfect: bool
     seed: Optional[str]
-    animate_generation: Optional[bool]
-    animate_shortest_way: Optional[bool]
+    animate_generation: Optional[bool] = False
+    animate_shortest_way: Optional[bool] = False
     drawing: Optional[str] = "42"
     theme: Optional[str] = "squeleton"
 
