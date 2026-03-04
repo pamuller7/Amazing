@@ -8,7 +8,6 @@ class SolveMaze:
         self.exit = self.maze.exit
         self.pos_line = self.entry[0]
         self.pos_col = self.entry[1]
-        self.way = [[]]
         self.explored = [self.entry]
         self.is_in_bound = self.maze.is_in_bound
 
@@ -84,6 +83,10 @@ class SolveMaze:
                 old_dir = [self.pos_line, self.pos_col]
                 self.travel_in_maze(try_dir)
                 if mat_star[self.pos_line][self.pos_col] == init - 1:
+                    if self.maze.anim_res:
+                        self.maze.maze[self.pos_line][self.pos_col] += 32
+                        self.maze.print_maze_on_terminal()
+                        self.maze.maze[self.pos_line][self.pos_col] += 64
                     if try_dir == self.maze.north:
                         way += 'N'
                     if try_dir == self.maze.south:
@@ -96,4 +99,5 @@ class SolveMaze:
                     break
                 else:
                     [self.pos_line, self.pos_col] = old_dir
+        way += '\n'
         return (way)

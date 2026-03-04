@@ -1,7 +1,7 @@
-from mlx import Mlx
-from typing import Any
-from vector2 import Vector2
+# from mlx import Mlx
+from typing import Optional
 from enum import Enum
+import time
 
 
 class MazeError(Exception):
@@ -9,29 +9,42 @@ class MazeError(Exception):
 
 
 class Colors(Enum):
+    BG_RED = '\033[41m'
+    BG_GREEN = '\033[42m'
+    BG_ORANGE = '\033[43m'
+    BG_BLUE = '\033[44m'
+    BG_PURPULE = '\033[45m'
+    BG_LIGHT_BLUE = '\033[46m'
+    BG_WHITE = '\033[47m'
     PURPULE = '\033[95m'
-    BLUE = '\033[94m'
-    GREEN = '\033[92m'
+    BLUE = '\033[4;94m'
     YELLOW = '\033[93m'
+    GREEN = '\033[92m'
     RED = '\033[91m'
     ENDC = '\033[0m'
     BOLD = '\033[1m'
+
 
 class Maze:
     def __init__(
         self,
         height: int,
         width: int,
-        entry: Vector2,
-        exit: Vector2,
+        entry: list,
+        exit: list,
         output_file: str,
         perfect: bool,
-        cell_size: int = 50,
+        seed: Optional[int],
+        anim_generation: Optional[bool] = True,
+        anim_resolution: Optional[bool] = True
     ) -> None:
+        self.anim_gen = anim_generation
+        self.anim_res = anim_resolution
+        self.seed = seed
         self.width = width
         self.height = height
-        self.entry = entry
-        self.exit = exit
+        self.entry = [entry[1], entry[0]]
+        self.exit = [exit[1], exit[0]]
         self.output_file = output_file
         self.perfect = perfect
         self.north = 0b1110
@@ -58,21 +71,21 @@ class Maze:
                     for y in range(-1, 2):
                         weigth_square += self.maze[i + x][j + y]
 
-    def at(self, pos: Vector2) -> int:
-        return self.maze[pos.y][pos.x]
+    def at(self, pos: list) -> int:
+        value_cell: int = self.maze[pos[0]][pos[1]]
+        return value_cell
 
-    def is_in_bound(self, pos: Vector2) -> bool:
-        return (
-            pos.y < self.height
-            and pos.y >= 0
-            and pos.x < self.width
-            and pos.x >= 0
-        )
+    def is_in_bound(self, pos: list) -> bool:
+        cond: bool = (pos[0] < self.height
+                      and pos[0] >= 0
+                      and pos[1] < self.width
+                      and pos[1] >= 0)
+        return (cond)
 
-    def put_in_maze(self, pos: Vector2, value: int) -> None:
+    def put_in_maze(self, pos: list, value: int) -> None:
         # casse le mur value a la position pos
         if self.is_in_bound(pos) and self.at(pos) < 0b11111:
-            self.maze[pos.y][pos.x] = self.at(pos) & value
+            self.maze[pos[0]][pos[1]] = self.at(pos) & value
 
     def init_maze(self) -> list[list[int]]:
         """Init the maze, full of unexplored cells (only walls), and if
@@ -101,6 +114,10 @@ class Maze:
                         ][col - int(self.width / 2 + col_draw - col_draw / 2)]
                         == 1
                     ):
+                        if [line, col] == self.entry:
+                            raise ValueError("Entry is in the drawing")
+                        elif [line, col] == self.exit:
+                            raise ValueError("Exit is in the drawing")
                         maze[line][col] = 0b11111
                         self.nb_cell_to_fill -= 1
         else:
@@ -123,6 +140,12 @@ class Maze:
         convert:hex to print the maze in hexa (Mandatory)
                 Nothing to print the maze in ascii"""
         content = ""
+        wall_color = Colors.RED.value + Colors.BOLD.value
+        draw_color = Colors.YELLOW.value + Colors.BOLD.value
+        entry_color = Colors.BG_ORANGE.value
+        head_solver_color = Colors.BG_BLUE.value
+        tail_colver_color = Colors.BG_LIGHT_BLUE.value
+        exit_color = Colors.BG_RED.value
         if convert == "hex":
             hexa = [
                 "0",
@@ -142,42 +165,53 @@ class Maze:
                 "E",
                 "F",
             ]
-            maze = [[] for _ in range(self.height + 1)]
+            maze: list[list] = [[] for _ in range(self.height + 1)]
             for line in range(self.height):
                 for col in range(self.width):
                     maze[line].append(hexa[self.maze[line][col] % 16])
-            for line in maze:
-                for cell in line:
-                    content += cell
-                content += "\n"
+            for tab in maze:
+                for cell in tab:
+                    content += (cell)
+                content += ("\n")
         else:
-            content += " "
+            print(" ", end="")
             for _ in range(self.width):
-                content += "__"
-            content += "\n"
+                print(wall_color + "__" + Colors.ENDC.value, end="")
+            print(wall_color + "\n" + Colors.ENDC.value, end="")
             for line in range(self.height):
-                content += "|"
+                print(Colors.ENDC.value + wall_color + "|"
+                      + Colors.ENDC.value, end="")
                 for col in range(self.width):
                     cell = self.maze[line][col]
                     if cell == 0b11111:
-                        content += "##"
-                    elif cell == 98:
-                        content += "++"
+                        print(draw_color + "##" +
+                              Colors.ENDC.value, end="")
                     else:
+                        if [line, col] == self.entry:
+                            print(entry_color, end="")
+                        if cell >> 5 & 1 == 1:
+                            print(head_solver_color, end="")
+                        if cell >> 6 & 1 == 1:
+                            print(tail_colver_color, end="")
+                        if [line, col] == self.exit:
+                            print(exit_color, end="")
                         if (cell >> 2) & 1 == 1:
-                            content += "_"
+                            print(wall_color + "_", end="")
                         else:
-                            content += " "
+                            print(wall_color + " ", end="")
                         if cell >> 1 & 1 == 1:
-                            content += "|"
+                            print(Colors.ENDC.value + wall_color
+                                  + "|" + Colors.ENDC.value, end="")
                         else:
                             if (cell >> 2) & 1 == 1:
-                                content += "_"
+                                print(wall_color
+                                      + "_" + Colors.ENDC.value, end="")
                             else:
-                                content += " "
-                content += "\n"
-            content += " "
-            content += "\n"
+                                print(wall_color
+                                      + " " + Colors.ENDC.value, end="")
+                print("\n", end="")
+            print(" ", end="")
+            print("\n", end="")
         return content
 
     def draw_maze(self) -> None:
@@ -206,72 +240,8 @@ class Maze:
                     if [line, col] == self.exit:
                         raise ValueError("Exit can't be in the 42 pattern")
                     self.maze[line][col] = 0b11111
-                # choisist un nombre de direction au hasard, casse les murs
-        # walker = Walker()
-        # walker.walk()
 
-    def to_background_image(self, m: Mlx, img_ptr: Any):
-        data, _, line_size, format = m.mlx_get_data_addr(img_ptr)
-        for line in range(self.height * self.cell_size):
-            for col in range(self.width * self.cell_size):
-                r, g, b, a = 100, 100, 200, 254
-                if 2 * 100 <= col <= 4 * 100 and 2 * 100 <= line <= 4 * 100:
-                    r, g, b, a = 255, 0, 0, 254
-                if format == 0:
-                    data[4 * col + line * line_size] = b
-                    data[4 * col + line * line_size + 1] = g
-                    data[4 * col + line * line_size + 2] = r
-                    data[4 * col + line * line_size + 3] = a
-                else:
-                    data[4 * col + line * line_size] = a
-                    data[4 * col + line * line_size + 1] = r
-                    data[4 * col + line * line_size + 2] = g
-                    data[4 * col + line * line_size + 3] = b
-
-    def to_image(self, m: Mlx, img_ptr: Any):
-        data, _, line_size, format = m.mlx_get_data_addr(img_ptr)
-        self.to_background_image(m, img_ptr)
-
-        def write_line(start, incr, color=(0, 0, 0, 255)):
-            for _ in range(self.cell_size):
-                r, g, b, a = color
-                print(start)
-                if format == 0:
-                    data[start] = b
-                    data[start + 1] = g
-                    data[start + 2] = r
-                    data[start + 3] = a
-                else:
-                    data[start] = a
-                    data[start + 1] = r
-                    data[start + 2] = g
-                    data[start + 3] = b
-                start += incr
-
-        for line in range(self.height):
-            for col in range(self.width):
-                if self.maze[line][col] & 0b1000:
-                    write_line(
-                        self.cell_size * 4 * col
-                        + self.cell_size * line_size * line,
-                        4,
-                    )
-                if self.maze[line][col] & 0b0100:
-                    write_line(
-                        self.cell_size * 4 * (col + 1)
-                        + self.cell_size * line_size * line,
-                        line_size,
-                    )
-                if self.maze[line][col] & 0b0010:
-                    write_line(
-                        self.cell_size * 4 * col
-                        + self.cell_size * line_size * (line + 1)
-                        - line_size,
-                        4,
-                    )
-                if self.maze[line][col] & 0b0001:
-                    write_line(
-                        self.cell_size * 4 * (col)
-                        + self.cell_size * line_size * line,
-                        line_size,
-                    )
+    def print_maze_on_terminal(self):
+        print("\x1B[4l\x1B[;H")
+        self.print_maze()
+        time.sleep(1 / (self.width * self.height))
