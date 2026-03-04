@@ -15,10 +15,10 @@ class CheckedResult(BaseModel):
 
     @model_validator(mode="after")
     def entry_must_be_in_bound(self) -> Self:
-        if not self.assert_is_in_bound(
-            self.entry
-        ) or not self.assert_is_in_bound(self.exit):
-            raise ValueError("Not in bounds")
+        if not self.assert_is_in_bound(self.entry):
+            raise ValueError(f"Entry = {self.entry} is not in bounds")
+        if not self.assert_is_in_bound(self.exit):
+            raise ValueError(f"Exit = {self.exit} is not in bounds")
         if self.entry == self.exit:
             raise ValueError("Entry and Exit must be different")
         return self
@@ -80,7 +80,7 @@ class KeyParser:
     def parse(
         self, line: str, line_number: int
     ) -> KeyParseResult | ParseError:
-        line = line[len(f"{self.key_name}=") :]
+        line = line[len(f"{self.key_name}="):]
         ret = self.arg.parse(line, line_number)
         if isinstance(ret, ParseError):
             return ParseError(line_number, f"Key: {self.key_name} : {ret.msg}")
@@ -120,12 +120,14 @@ class TupleIntParser(ArgParser):
 class IdentParser(ArgParser):
     def parse(self, str: str, line_number: int) -> ParseError | str:
         if len(str) == 0 or str.isspace():
-            return ParseError(line_number, f"`{str!r}` is empty or space only")
+            return ParseError(line_number, f"`{str!r}` is empty \
+or space only, please enter a file name")
         return str
 
 
 class BoolParser(ArgParser):
     def parse(self, str: str, line_number: int) -> ParseError | bool:
+        str = str.replace(" ", "")
         if str == "True":
             return True
         elif str == "False":
@@ -199,5 +201,8 @@ class Parser:
         pr = ParseResult()
         for k in results:
             k.apply(pr)
-        CheckedResult(**pr.__dict__)
+        try:
+            CheckedResult(**pr.__dict__)
+        except ValidationError as e:
+            raise ValueError(e.errors()[0]['msg'].replace("Value error, ", ""))
         return (pr.__dict__)
