@@ -26,18 +26,28 @@ def main():
 
         if maze.interactive:
             output_to_print = "e"
-            while output_to_print != "q":
-                print("please enter m to print maze, \
-p to print the path or q to quit: ", end="")
+            maze.print_maze("1")
+            count_path = 0
+            while output_to_print != "3":
+                print("""==== A-Maze-ing ====
+1- Re-generate a new maze
+2- Show/hide the path
+3- Quit
+choice(1-3): """, end="")
                 output_to_print = input()
                 print("\033c", end="")
-                if output_to_print == "m":
+                if output_to_print == "1":
+                    main()
+                    return
+                if output_to_print == "2" and count_path % 2 == 1:
+                    count_path += 1
                     print("Generated maze:")
                     maze.print_maze("1")
-                elif output_to_print == "p":
+                elif output_to_print == "2" and count_path % 2 == 0:
+                    count_path += 1
                     print("The shortest solution")
                     maze.print_maze()
-                elif output_to_print != "q":
+                elif output_to_print != "3":
                     print("Input not recognised")
         with open(maze.output_file, "w") as f:
             f.write(content)
