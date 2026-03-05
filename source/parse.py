@@ -183,6 +183,7 @@ class Parser:
             OptKeyParser("SEED", IdentParser()),
             OptKeyParser("ANIMATE_GENERATION", BoolParser()),
             OptKeyParser("ANIMATE_SHORTEST_WAY", BoolParser()),
+            OptKeyParser("INTERACTIVE", BoolParser()),
             OptKeyParser("DRAWING", IdentParser()),
             OptKeyParser("THEME", IdentParser()),
         ]

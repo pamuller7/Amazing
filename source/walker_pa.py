@@ -153,6 +153,8 @@ class Walker:
         '''travel in the maze, when an unexplored cell is encountered,
         draw a random path'''
 
+        if (self.maze.anim_gen):
+            print("\033c", end="")
         if self.nb_cell_to_fill == 0:
             return
         self.pos_line = 0
@@ -171,4 +173,4 @@ class Walker:
             else:
                 self.draw_path()
                 if (self.maze.anim_gen):
-                    self.maze.print_maze_on_terminal()
+                    self.maze.print_maze_on_terminal("Generating the maze...")

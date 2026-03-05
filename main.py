@@ -9,12 +9,13 @@ import sys
 
 def main():
 
+    if len(sys.argv) > 2:
+        print("ERROR: Too many args, Please run python3 a_maze_ing <filename>.txt")
+        return
     try:
         with open(sys.argv[1], 'r') as f:
             args = f.read()
-
         args = Parser.parse(args)
-        print(args)
         maze = Maze(**args)
         walk = Walker(maze)
         walk.walk_and_fill()
@@ -23,6 +24,21 @@ def main():
         content += f"Entry: {args['entry']}\nExit: {args['exit']}\n"
         content += solvmaze.output_shortest_way()
 
+        if maze.interactive:
+            output_to_print = "e"
+            while output_to_print != "q":
+                print("please enter m to print maze, \
+p to print the path or q to quit: ", end="")
+                output_to_print = input()
+                print("\033c", end="")
+                if output_to_print == "m":
+                    print("Generated maze:")
+                    maze.print_maze("1")
+                elif output_to_print == "p":
+                    print("The shortest solution")
+                    maze.print_maze()
+                elif output_to_print != "q":
+                    print("Input not recognised")
         with open(maze.output_file, "w") as f:
             f.write(content)
     except ValidationError as e:
@@ -33,7 +49,8 @@ def main():
         print("ERROR: No configuration txt given as argument. \
 Please run python3 a_maze_ing <filename>.txt")
     except FileNotFoundError:
-        print("Please create a config.txt with the arguments:")
+        print("File not found, ", end="")
+        print("please create a config.txt with the arguments:")
         print("""    WIDTH=<int>
     HEIGHT=<int>
     ENTRY=<int>,<int>

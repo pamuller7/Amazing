@@ -71,6 +71,8 @@ class SolveMaze:
         '''Travel in the matrix created by the djikstra algo, and output the
         direction taken by the solver to link the entry to the exit.'''
 
+        if self.maze.anim_res:
+            print("\033c", end="")
         mat_star = self.djikstra_matrix()
         way = ""
         self.pos_line = self.entry[0]
@@ -83,10 +85,10 @@ class SolveMaze:
                 old_dir = [self.pos_line, self.pos_col]
                 self.travel_in_maze(try_dir)
                 if mat_star[self.pos_line][self.pos_col] == init - 1:
+                    self.maze.maze[self.pos_line][self.pos_col] += 32
                     if self.maze.anim_res:
-                        self.maze.maze[self.pos_line][self.pos_col] += 32
-                        self.maze.print_maze_on_terminal()
-                        self.maze.maze[self.pos_line][self.pos_col] += 64
+                        self.maze.print_maze_on_terminal("Finding the shortest solution...")
+                    self.maze.maze[self.pos_line][self.pos_col] += 64
                     if try_dir == self.maze.north:
                         way += 'N'
                     if try_dir == self.maze.south:

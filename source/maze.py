@@ -42,9 +42,11 @@ class Maze:
         seed: Optional[int],
         animate_generation: Optional[bool] = False,
         animate_shortest_way: Optional[bool] = False,
+        interactive: Optional[bool] = False,
         drawing: Optional[str] = "42",
         theme: Optional[str] = "squeleton"
     ) -> None:
+        self.interactive = interactive
         self.anim_gen: bool = animate_generation
         self.anim_res: bool = animate_shortest_way
         self.seed: int = seed
@@ -114,7 +116,7 @@ class Maze:
                 "draw_color": Colors.LIGHT_GREY.value + Colors.BOLD.value,
                 "entry_color": Colors.BG_GREEN.value,
                 "head_solver_color": Colors.BG_GREY.value,
-                "tail_colver_color": Colors.BG_GREY.value,
+                "tail_colver_color": Colors.BG_LIGHT_BLUE.value,
                 "exit_color": Colors.BG_RED.value
             }
         elif theme == "rgb":
@@ -247,10 +249,11 @@ is in the drawing")
                     else:
                         if [line, col] == self.entry:
                             print(entry_color, end="")
-                        if cell >> 5 & 1 == 1:
-                            print(head_solver_color, end="")
-                        if cell >> 6 & 1 == 1:
-                            print(tail_colver_color, end="")
+                        if not convert:
+                            if cell >> 6 & 1 == 1:
+                                print(tail_colver_color, end="")
+                            elif cell >> 5 & 1 == 1:
+                                print(head_solver_color, end="")
                         if [line, col] == self.exit:
                             print(exit_color, end="")
                         if (cell >> 2) & 1 == 1:
@@ -299,7 +302,8 @@ is in the drawing")
                         raise ValueError("Exit can't be in the 42 pattern")
                     self.maze[line][col] = 0b11111
 
-    def print_maze_on_terminal(self):
-        print("\x1B[4l\x1B[;H")
+    def print_maze_on_terminal(self, msg: str):
+        print("\033[H")
+        print(msg)
         self.print_maze()
-        time.sleep(1 / (max(self.height, self.width)))
+        time.sleep(1 / ((max(self.height, self.width))))
