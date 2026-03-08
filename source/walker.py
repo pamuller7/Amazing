@@ -42,11 +42,7 @@ class DisjointSet:
         y = cls.find(sets, pos2)
         if x is y:
             return False
-        if x.rank < y.rank:
-            x, y = y, x
-        if x.rank == y.rank:
-            x.rank += 1
-        y.parent = x
+        x.parent = y
         return True
 
 
