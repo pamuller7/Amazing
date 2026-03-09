@@ -184,7 +184,7 @@ class Parser:
     """
 
     @staticmethod
-    def parse(txt: str):
+    def parse(txt: str) -> CheckedConfig:
         extractors: list[KeyParser] = [
             KeyParser("WIDTH", IntParser()),
             KeyParser("HEIGHT", IntParser()),

@@ -9,7 +9,9 @@ class SolveMaze:
         self.pos_line = self.entry[0]
         self.pos_col = self.entry[1]
         self.explored = [self.entry]
+        self.perfect_error = []
         self.is_in_bound = self.maze.is_in_bound
+        self.mat_star = None
 
     def travel_in_maze(self, dir: int) -> None:
         """Take an int (north 0b0111, south 0b1101 etc...) and change the pos
@@ -78,11 +80,11 @@ class SolveMaze:
 
         if self.maze.config.animate_shortest_way:
             print("\033c", end="")
-        mat_star = self.djikstra_matrix()
+        self.mat_star = self.djikstra_matrix()
         way = ""
         self.pos_line = self.entry[0]
         self.pos_col = self.entry[1]
-        init = mat_star[self.pos_line][self.pos_col]
+        init = self.mat_star[self.pos_line][self.pos_col]
         while init != 0:
             avb_pos = self.decomp_cell(
                 self.maze.maze[self.pos_line][self.pos_col]
@@ -90,7 +92,7 @@ class SolveMaze:
             for try_dir in avb_pos:
                 old_dir = [self.pos_line, self.pos_col]
                 self.travel_in_maze(try_dir)
-                if mat_star[self.pos_line][self.pos_col] == init - 1:
+                if self.mat_star[self.pos_line][self.pos_col] == init - 1:
                     self.maze.maze[self.pos_line][self.pos_col] += 32
                     if self.maze.config.animate_shortest_way:
                         self.maze.print_maze_on_terminal(
@@ -105,7 +107,7 @@ class SolveMaze:
                         way += "E"
                     if try_dir == self.maze.west:
                         way += "W"
-                    init = mat_star[self.pos_line][self.pos_col]
+                    init = self.mat_star[self.pos_line][self.pos_col]
                     break
                 else:
                     [self.pos_line, self.pos_col] = old_dir

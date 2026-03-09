@@ -185,13 +185,13 @@ class Walker:
         col_draw = len(self.maze.drawing[0])
         if check == "line":
             return(
-                    pos >= int(self.maze.height / 2 - line_draw / 2)
+                    pos >= int(self.maze.config.height / 2 - line_draw / 2)
                     and pos
-                    < line_draw + int(self.maze.height / 2 - line_draw / 2))
+                    < line_draw + int(self.maze.config.height / 2 - line_draw / 2))
         if check == "col":
             return(
-                    pos >= int(self.maze.width / 2 - col_draw / 2)
-                    and pos < col_draw + int(self.maze.width / 2 - col_draw / 2))
+                    pos >= int(self.maze.config.width / 2 - col_draw / 2)
+                    and pos < col_draw + int(self.maze.config.width / 2 - col_draw / 2))
     
     def walk_and_fill(self) -> None:
         """travel in the maze, when an unexplored cell is encountered,
@@ -201,14 +201,14 @@ class Walker:
             print("\033c", end="")
         if self.nb_cell_to_fill == 0:
             return
-        self.pos_line = random.choice([x for x in range(self.maze.height) if not self.is_around_drawing(x, "line")])
-        self.pos_col = random.choice([x for x in range(self.maze.width)
+        self.pos_line = random.choice([x for x in range(self.maze.config.height) if not self.is_around_drawing(x, "line")])
+        self.pos_col = random.choice([x for x in range(self.maze.config.width)
                                       if not self.is_around_drawing(x, "col")])
         index = [0, 0]
         old_index = 0
-        tab_line = [x for x in range(self.pos_line, self.maze.height)] +\
+        tab_line = [x for x in range(self.pos_line, self.maze.config.height)] +\
             [x for x in range(self.pos_line - 1, -1, -1)]
-        tab_col = [x for x in range(self.pos_col, self.maze.width)] +\
+        tab_col = [x for x in range(self.pos_col, self.maze.config.width)] +\
             [x for x in range(self.pos_col - 1, -1, -1)]
         while self.nb_cell_to_fill - 1 != 0:
             if not [x for x in self.maze.dir
@@ -234,7 +234,7 @@ class Walker:
     #         return the pos of cell that are still unexplored.
     #         pos: list = the position from which we start the check'''
 
-    #     for i in range(pos[0], self.maze.height):
+    #     for i in range(pos[0], self.maze.config.height):
     #         if pos[0] != self.line_checked:
     #             start_col = 0
     #         else:

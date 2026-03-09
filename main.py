@@ -27,7 +27,7 @@ def main():
                 args.theme = new_theme
             x = time()
             maze = Maze(args)
-            if (maze.anim_gen):
+            if (maze.config.animate_generation):
                 print("\033c", end="")
             if maze.config.perfect and maze.config.alt:
                 kruskal(maze)
@@ -38,25 +38,30 @@ def main():
             content = maze.print_maze("hex")
             x = time()
             solvmaze = SolveMaze(maze)
-            content += f"Entry: {args['entry']}\nExit: {args['exit']}\n"
+            content += f"Entry: {args.entry}\nExit: {args.exit}\n"
             content += solvmaze.output_shortest_way()
             solving = time() - x
+            with open(maze.config.output_file, "w") as f:
+                f.write(content)
 
-            if maze.interactive:
+            if maze.config.interactive:
                 print("\033c", end="")
                 if not maze.can_draw_42():
                     print("ERROR: The maze is too small to be printed")
                 output_to_print = "e"
                 count_path = 0
-                if maze.anim_gen or maze.anim_res:
+                if (
+                    maze.config.animate_generation
+                    or maze.config.animate_shortest_way
+                ):
                     animation = "with animation "
                 else:
                     animation = ""
                 print(f"Program {animation}took:\n\
                 {generation} secondes to generate the maze\n\
                 {solving} secondes to solve it")
-                print("checker =", check_valid_maze(maze, solvmaze, walk))
-                if maze.anim_res:
+                print("checker =", check_valid_maze(maze, solvmaze))
+                if maze.config.animate_shortest_way:
                     count_path += 1
                     maze.print_maze()
                 else:
@@ -100,8 +105,8 @@ def main():
                         return
                     elif output_to_print != "4":
                         print("Input not recognised")
-            with open(maze.output_file, "w") as f:
-                f.write(content)
+            else:
+                return
         except ValidationError as e:
             print(e)
             return
