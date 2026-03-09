@@ -1,0 +1,31 @@
+#==================================PROGRAMS MANDATORY==================================
+#WIDTH: an int between 0 and 1000
+#HEIGHT: an int between 0 and 1000 
+#ENTRY: coord (x,y) of the entry
+#EXIT: coord (x,y) of the exit
+#OUTPUT_FILE: file name of the file containing the hexa maze and the shortest way to link entry to exit
+#PERFECT: bool, saying if the maze should be perfect or not
+
+#===============================PROGRAMS FACULTATIVE FLAGS===============================
+#SEED: int, the seed for random, to generate the same maze
+#ANIMATE_GENERATION: bool, if you want the animation of the maze generation
+#ANIMATE_SHORTEST_WAY: bool, if you want the animation of the path finding
+#INTERACTIVE: bool, if you want the interactive interface
+#THEME: str, for choosing a color theme for the output (default: squeleton) themes available: red, squeleton, rgb, green
+#DRAWING: str, to choose a different drawing in the maze (default 42) drawings available: 42, smiley, pac-man, no_drawing
+
+WIDTH= 100
+HEIGHT= 100
+ENTRY= 99,0
+EXIT= 0,99
+OUTPUT_FILE= output_maze.txt
+PERFECT=True
+alt=True
+
+
+SEED= 4
+#ANIMATE_GENERATION=True
+#ANIMATE_SHORTEST_WAY=True
+INTERACTIVE= True
+THEME=squeleton
+DRAWING=pac-man
