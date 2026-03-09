@@ -5,16 +5,17 @@ from source.find_way import SolveMaze
 from source.parse import Parser
 from pydantic import ValidationError
 import sys
-# from mlx import Mlx
 
 
 def main():
-
     if len(sys.argv) > 2:
-        print("ERROR: Too many args, Please run python3 a_maze_ing <filename>.txt")
+        print(
+            "ERROR: Too many args,"
+            " Please run python3 a_maze_ing <filename>.txt"
+        )
         return
     try:
-        with open(sys.argv[1], 'r') as f:
+        with open(sys.argv[1], "r") as f:
             args = f.read()
         config = Parser.parse(args)
         maze = Maze(config)
@@ -33,11 +34,14 @@ def main():
             maze.print_maze("1")
             count_path = 0
             while output_to_print != "3":
-                print("""==== A-Maze-ing ====
+                print(
+                    """==== A-Maze-ing ====
 1- Re-generate a new maze
 2- Show/hide the path
 3- Quit
-choice(1-3): """, end="")
+choice(1-3): """,
+                    end="",
+                )
                 output_to_print = input()
                 print("\033c", end="")
                 if output_to_print == "1":
@@ -57,7 +61,7 @@ choice(1-3): """, end="")
             f.write(content)
     except ValidationError as e:
         print(e)
-    except (ValueError) as e:
+    except ValueError as e:
         print("ERROR:", e)
     except IndexError:
         print("ERROR: No configuration txt given as argument. \

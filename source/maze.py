@@ -1,4 +1,3 @@
-from typing import Any
 from source.vector2 import Vector2
 from source.parse import CheckedConfig
 from source.graphics import drawings, themes, Colors, Theme
@@ -97,10 +96,8 @@ class Maze:
                         maze[line][col] = 0b11111
                         self.nb_cell_to_fill -= 1
         else:
-            raise MazeError(
-                "Invalid information:\
- width and height must be > 0"
-            )
+            raise MazeError("Invalid information:\
+ width and height must be > 0")
         return maze
 
     def can_draw_42(self) -> bool:
@@ -124,8 +121,8 @@ class Maze:
                     maze[line].append(hexa[self.maze[line][col] % 16])
             for tab in maze:
                 for cell in tab:
-                    content += (cell)
-                content += ("\n")
+                    content += cell
+                content += "\n"
         else:
             print(" ", end="")
             for _ in range(self.config.width):

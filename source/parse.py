@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field, model_validator, ValidationError
 from source.graphics import drawings, themes
 from source.vector2 import Vector2
 
+
 class CheckedConfig(BaseModel):
     width: int = Field(ge=2, le=10_000)
     height: int = Field(ge=2, le=10_000)
@@ -152,10 +153,13 @@ class BoolParser(ArgParser):
 class KeysParser(ArgParser):
     def __init__(self, allowed: KeysView) -> None:
         self.allowed: List[str] = list(allowed)
+
     def parse(self, str: str, line_number: int) -> ParseError | str:
         str = str.strip().replace(" ", "")
         if str not in self.allowed:
-            return ParseError(line_number, f"`{str}` is not in valid keys: {self.allowed}")
+            return ParseError(
+                line_number, f"`{str}` is not in valid keys: {self.allowed}"
+            )
         return str
 
 
