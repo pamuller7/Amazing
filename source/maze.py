@@ -157,6 +157,8 @@ class Maze:
                 [0b1111 for _ in range(self.width)] for _ in range(self.height)
             ]
             can_draw = self.can_draw_42()
+            if not can_draw:
+                print("ERROR: The maze is too small to be printed")
             for line in range(self.height):
                 for col in range(self.width):
                     if (
@@ -304,6 +306,8 @@ is in the drawing")
 
     def print_maze_on_terminal(self, msg: str):
         print("\033[H")
+        if not self.can_draw_42():
+            print("ERROR: The maze is too small to be printed")
         print(msg)
         self.print_maze()
         time.sleep(1 / ((max(self.height, self.width))))
