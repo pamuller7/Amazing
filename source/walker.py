@@ -1,8 +1,7 @@
 from source.maze import Maze
 from source.vector2 import Vector2
 from random import shuffle
-from typing import List
-from typing_extensions import Self
+from typing import List, Any
 
 
 def get_direction(maze: Maze, move: int) -> Vector2:
@@ -21,14 +20,14 @@ class DisjointSet:
     def __init__(self, pos: Vector2) -> None:
         self.pos: Vector2 = pos
         self.rank: int = 0
-        self.parent: Self = self
+        self.parent: Any = self
 
     @classmethod
-    def at(cls, sets: List[List[Self]], pos: Vector2) -> Self:
+    def at(cls, sets: List[List[Any]], pos: Vector2) -> Any:
         return sets[pos.y][pos.x]
 
     @classmethod
-    def find(cls, sets: List[List[Self]], pos: Vector2) -> Self:
+    def find(cls, sets: List[List[Any]], pos: Vector2):
         x = sets[pos.y][pos.x]
         while x != x.parent:
             x.parent = x.parent.parent
@@ -37,7 +36,7 @@ class DisjointSet:
 
     @classmethod
     def merge(
-        cls, sets: List[List[Self]], pos1: Vector2, pos2: Vector2
+        cls, sets: List[List[Any]], pos1: Vector2, pos2: Vector2
     ) -> bool:
         x = cls.find(sets, pos1)
         y = cls.find(sets, pos2)

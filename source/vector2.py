@@ -48,7 +48,7 @@ class Vector2:
 
     @classmethod
     def from_iter(cls, tup: Tuple[int, int] | List[int]) -> Self:
-        return Vector2(tup[0], tup[1])
+        return cls(tup[0], tup[1])
 
-    def inverted(self) -> Self:
+    def inverted(self) -> Any:
         return Vector2(self.y, self.x)
