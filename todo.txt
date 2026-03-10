@@ -1,0 +1,10 @@
+- organiser main
+- separer print et generation si possible (avec yield)
+- preparer pour le .whl
+- tar.gz a la fin pour pouvoir rebuild (correction)
+- correction: demande flags minuscules ou maj (ALT=True et alt=True)
+- renomer le main
+- gerer seed
+- changer dessin pendant interactive
+- opt: doubler taile maze pr meileur affichage
+-README
