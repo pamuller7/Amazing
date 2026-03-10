@@ -1,10 +1,25 @@
-- organiser main
+main:
+- organiser main (fin a voir)
+- changer seed en opt (astrale)
+- renomer le main (a_maze_ing.py ou le truc dans le style) (gros travail en duo a venir)
+- changer dessin pendant interactive - menu de l'interactive (astrale)
+
+algo(maze et wlker et find_way) (pl)
 - separer print et generation si possible (avec yield)
-- preparer pour le .whl
-- tar.gz a la fin pour pouvoir rebuild (correction)
+
+parse: (astrale)
 - correction: demande flags minuscules ou maj (ALT=True et alt=True)
-- renomer le main
-- gerer seed
-- changer dessin pendant interactive
-- opt: doubler taile maze pr meileur affichage
--README
+
+tests: (astrale)
+- tester generation labyrinthe
+
+maze:
+- gerer seed (astrale)
+- opt: doubler taile maze pr meileur affichage (printmze) (pl)
+
+final:
+	rendu:
+	- preparer pour le .whl
+	- tar.gz a la fin pour pouvoir rebuild (correction)
+
+	-README
