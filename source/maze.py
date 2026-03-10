@@ -226,10 +226,11 @@ class Maze:
                         raise ValueError("Exit can't be in the 42 pattern")
                     self.maze[line][col] = 0b11111
 
-    def print_maze_on_terminal(self, msg: str):
+    def print_maze_on_terminal(self, msg: str, sleep=True):
         print("\033[H")
         if not self.can_draw_42():
             print("ERROR: The maze is too small to be printed")
         print(msg)
         self.print_maze()
-        time.sleep(1 / ((max(self.config.height, self.config.width))))
+        if sleep:
+            time.sleep(1 / ((max(self.config.height, self.config.width))))

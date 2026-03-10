@@ -81,4 +81,4 @@ def kruskal(maze: Maze):
             }
             maze.put_in_maze(cells_dividing[1], rev[wall])
             if maze.config.animate_generation:
-                maze.print_maze_on_terminal("")
+                maze.print_maze_on_terminal("Kruskal generation...", False)
