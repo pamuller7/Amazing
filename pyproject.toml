@@ -1,15 +1,16 @@
 [project]
-name = "source"
+name = "mazegen"
 version = "0.1.0"
 description = ""
 authors = [
     {name = "pamuller, acercy"}
 ]
-readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "pydantic (>=2.12.5,<3.0.0)",
-    "typing-extensions (>=4.15.0,<5.0.0)"
+    "typing-extensions (>=4.15.0,<5.0.0)",
+    "mypy (>=1.19.1, <2.0.0)",
+    "flake8 (>=7.3.0, <8.0.0)",
 ]
 
 
