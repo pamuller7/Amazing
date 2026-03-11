@@ -84,6 +84,12 @@ class SolveMaze:
         way = ""
         self.pos_line = self.entry[0]
         self.pos_col = self.entry[1]
+        self.maze.maze[self.pos_line][self.pos_col] += 32
+        if self.maze.config.animate_shortest_way:
+            self.maze.print_maze_on_terminal(
+                "Finding the shortest solution...", True, "1"
+            )
+        self.maze.maze[self.pos_line][self.pos_col] += 64
         init = self.mat_star[self.pos_line][self.pos_col]
         while init != 0:
             avb_pos = self.decomp_cell(
