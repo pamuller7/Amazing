@@ -265,4 +265,10 @@ not recognized",
             pr = CheckedConfig(**vars(pr))
             return pr
         except ValidationError as e:
-            raise ValueError(e.errors()[0]["msg"])
+            ctx = list(
+                map(
+                    lambda err: f"Invalid input for {err["loc"][0]}: {err["msg"]}",
+                    e.errors(),
+                )
+            )
+            raise ValueError("\n".join(ctx))
