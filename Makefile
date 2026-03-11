@@ -7,7 +7,7 @@ install: .installed
 
 .installed:
 	python3 -m venv venv
-	./venv/bin/python3 -m pip install ./mlx_CLXV/python/dist/mlx-2.2-py3-none-any.whl
+# 	./venv/bin/python3 -m pip install ./mlx_CLXV/python/dist/mlx-2.2-py3-none-any.whl
 	touch .installed
 # 	./venv/bin/python3 -m pip install mlx.whl
 

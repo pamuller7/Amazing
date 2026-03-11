@@ -1,33 +1,18 @@
-[build-system]
-requires = ["hatchling >= 1.26",
-            "build==1.4.0",
-            "flake8==7.3.0",
-            "mypy==1.19.1",
-            "pydantic==2.12.5",
-            "pydantic_core==2.41.5",
-            "typing==3.7.4.3",
-            "typing-inspection==0.4.2",
-            "typing_extensions==4.15.0"]
-
-build-backend = "hatchling.build"
-
-[tool.hatch.build.targets.wheel]
-packages = ["source"]
-
-
 [project]
-name = "mazegen"
-version = "0.0.1"
-authors = [
-  { name="pamuller", email="pamuller@example.com" },
-  { name="acercy", email="acercy@example.com" },
-]
+name = "source"
+version = "0.1.0"
 description = ""
+authors = [
+    {name = "pamuller, acercy"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic (>=2.12.5,<3.0.0)",
+    "typing-extensions (>=4.15.0,<5.0.0)"
+]
 
-#[project.urls]
-#Homepage = ""
-#Issues = ""
 
-[tool.setuptools]
-package-dir = {"" = "source"}
-include-package-data = false
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

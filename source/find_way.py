@@ -10,7 +10,7 @@ class SolveMaze:
         self.pos_col = self.entry[1]
         self.explored = [self.entry]
         self.is_in_bound = self.maze.is_in_bound
-        self.mat_star: list[list[int]] = []
+        self.mat_star = self.djikstra_matrix()
 
     def travel_in_maze(self, dir: int) -> None:
         """Take an int (north 0b0111, south 0b1101 etc...) and change the pos
@@ -79,7 +79,6 @@ class SolveMaze:
 
         if self.maze.config.animate_shortest_way:
             print("\033c", end="")
-        self.mat_star = self.djikstra_matrix()
         way = ""
         self.pos_line = self.entry[0]
         self.pos_col = self.entry[1]

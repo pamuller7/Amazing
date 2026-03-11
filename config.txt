@@ -14,18 +14,18 @@
 #THEME: str, for choosing a color theme for the output (default: squeleton) themes available: red, squeleton, rgb, green
 #DRAWING: str, to choose a different drawing in the maze (default 42) drawings available: 42, smiley, pac-man, no_drawing
 
-WIDTH= 11
-HEIGHT= 11
-ENTRY= 0,0
-EXIT= 0,10
+WIDTH=50
+HEIGHT=50
+ENTRY= 49,49
+EXIT= 0,0
 OUTPUT_FILE= output_maze.txt
-PERFECT=True
+PERFECT=False
 ALT=True
 
 
-SEED= 4
+SEED= 5
 #ANIMATE_GENERATION=True
 #ANIMATE_SHORTEST_WAY=True
 INTERACTIVE= True
-THEME=squeleton
-DRAWING=42
+THEME=rgb
+DRAWING=pac-man

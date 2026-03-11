@@ -143,7 +143,11 @@ def main() -> None:
         with open(sys.argv[1], "r") as f:
             arg = f.read()
         config: parsing.CheckedConfig = parsing.Parser.parse(arg)
-    except FileNotFoundError:
+    except IndexError:
+        print("ERROR: No configuration txt given as argument. \n\
+       Please run python3 a_maze_ing <filename>.txt")
+        return
+    except (FileNotFoundError):
         print("File not found, ", end="")
         print("please create a config.txt with the arguments:")
         print("""WIDTH=<int>
@@ -169,7 +173,7 @@ def main() -> None:
             maze = Maze(config)
             if maze.config.animate_generation:
                 print("\033c", end="")
-            if maze.config.perfect and maze.config.alt:
+            if maze.config.alt:
                 kruskal(maze)
             else:
                 walk = Walker(maze)
@@ -193,10 +197,6 @@ def main() -> None:
             return
         except ValueError as e:
             print("ERROR:", e)
-            return
-        except IndexError:
-            print("ERROR: No configuration txt given as argument. \
-    Please run python3 a_maze_ing <filename>.txt")
             return
 
 
