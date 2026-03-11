@@ -161,8 +161,12 @@ def main() -> None:
                 [ANIMATE_SHORTEST_WAY=<bool>]
                 """)
         return
+    try:
+        config: parsing.CheckedConfig = parsing.Parser.parse(arg)
     except ValueError as e:
         print(e)
+        print("please create a config file with the arguments:")
+        print(parsing.Parser.config_format())
         return
     if config.seed is None:
         config.seed = hex(random.randint(16**16, 16**17))

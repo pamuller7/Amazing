@@ -7,8 +7,8 @@ from source.vector2 import Vector2
 
 
 class CheckedConfig(BaseModel):
-    width: int = Field(ge=2, le=10_000)
-    height: int = Field(ge=2, le=10_000)
+    width: int = Field(ge=2, le=1000)
+    height: int = Field(ge=2, le=1000)
     entry: Tuple[int, int]
     exit: Tuple[int, int]
     output_file: str
@@ -167,6 +167,28 @@ class DictKeysParser(ArgParser):
         return str
 
 
+def key_fmt(p: KeyParser) -> str:
+    def fmt_arg(a: ArgParser) -> str:
+        if isinstance(a, IntParser):
+            return "<int>"
+        elif isinstance(a, TupleIntParser):
+            return "<int>,<int>"
+        elif isinstance(a, BoolParser):
+            return "True|False"
+        elif isinstance(a, IdentParser):
+            return "<str>"
+        elif isinstance(a, DictKeysParser):
+            return "|".join(a.allowed)
+        return ""
+
+    def fmt(p: KeyParser) -> str:
+        return f"{p.key_name}={fmt_arg(p.arg)}"
+
+    if isinstance(p, OptKeyParser):
+        return f"[{fmt(p)}]"
+    return fmt(p)
+
+
 class Parser:
     """Receives a string of the form:
     ```
@@ -174,11 +196,15 @@ class Parser:
     HEIGHT=<int>
     ENTRY=<int>,<int>
     EXIT=<int>,<int>
-    OUTPUT_FILE=<filename>
+    OUTPUT_FILE=<str>
     PERFECT=True|False
+    [ALT=True|False]
     [SEED=<str>]
-    [ANIMATE_GENERATION=<bool>]
-    [ANIMATE_SHORTEST_WAY=<bool>]
+    [ANIMATE_GENERATION=True|False]
+    [ANIMATE_SHORTEST_WAY=True|False]
+    [INTERACTIVE=True|False]
+    [DRAWING=42|smiley|pac-man|no_drawing]
+    [THEME=red|black|green|squeleton|rgb]
     ```
     and parses it into a ParseResult.
 
@@ -186,6 +212,10 @@ class Parser:
 
     raises a ValueError if string is not valid.
     """
+
+    @classmethod
+    def config_format(cls) -> str:
+        return "\n".join(list(map(key_fmt, cls.extractors)))
 
     extractors: list[KeyParser] = [
         KeyParser("WIDTH", IntParser()),
