@@ -1,6 +1,7 @@
 from source.maze import Maze
 from source.vector2 import Vector2
 import random
+from typing import Literal
 
 
 class Walker:
@@ -19,7 +20,7 @@ class Walker:
             wall_to_open: int = the wall we are trying to open
             pos: int = the current position in the maze
             --> Usefull to check if a wall can be broken"""
-
+        try_pos = [0, 0]
         if wall_to_open == self.maze.north:
             try_pos = [pos[0] - 1, pos[1]]
         elif wall_to_open == self.maze.east:
@@ -179,7 +180,9 @@ class Walker:
             index[0] = count_line
         return []
 
-    def is_around_drawing(self, pos, check):
+    def is_around_drawing(
+        self, pos: int, check: Literal["line", "col"]
+    ) -> bool:
         if not self.maze.can_draw_42():
             return False
         line_draw = len(self.maze.drawing)
@@ -196,6 +199,7 @@ class Walker:
             ) and pos < col_draw + int(
                 self.maze.config.width / 2 - col_draw / 2
             )
+        return False
 
     def walk_and_fill(self) -> None:
         """travel in the maze, when an unexplored cell is encountered,
@@ -238,7 +242,7 @@ class Walker:
                     tab_line, tab_col, index
                 )
                 if old_index != index[0]:
-                    tab_line = tab_line[index[0] :]
+                    tab_line = tab_line[index[0]:]
                 if not last_check_pos:
                     return
                 self.pos_line = last_check_pos[0]
@@ -247,50 +251,3 @@ class Walker:
                 self.draw_path()
                 if self.maze.config.animate_generation:
                     self.maze.print_maze_on_terminal("Generating the maze...")
-
-    # def find_incomplete_cell(self, pos: list) -> list:
-    #     '''checker, as the maze is randomly created, avoid that some parts are
-    #     forgotten.
-    #         return the pos of cell that are still unexplored.
-    #         pos: list = the position from which we start the check'''
-
-    #     for i in range(pos[0], self.maze.config.height):
-    #         if pos[0] != self.line_checked:
-    #             start_col = 0
-    #         else:
-    #             start_col = pos[1]
-    #         for j in range(start_col, self.maze.width):
-    #             if (
-    #                 self.maze.maze[i][j] < 0b1111
-    #                 and len([x for x in self.maze.dir
-    #                          if self.is_a_possible_way(x, [i, j])]) >= 1
-    #             ):
-    #                 return ([i, j])
-    #         self.line_checked = i + 1
-    #     return ([])
-
-    # def walk_and_fill(self) -> None:
-    #     '''travel in the maze, when an unexplored cell is encountered,
-    #     draw a random path'''
-
-    #     if (self.maze.anim_gen):
-    #         print("\033c", end="")
-    #     if self.nb_cell_to_fill == 0:
-    #         return
-    #     self.pos_line = 0
-    #     self.pos_col = 0
-    #     last_check_pos = [self.pos_line, self.pos_col]
-    #     while self.nb_cell_to_fill - 1 != 0:
-    #         if not [x for x in self.maze.dir
-    #                 if self.is_a_possible_way(
-    #                     x, [self.pos_line, self.pos_col])]:
-    #             self.line_checked = last_check_pos[0]
-    #             last_check_pos = self.find_incomplete_cell(last_check_pos)
-    #             if not last_check_pos:
-    #                 return
-    #             self.pos_line = last_check_pos[0]
-    #             self.pos_col = last_check_pos[1]
-    #         else:
-    #             self.draw_path()
-    #             if (self.maze.anim_gen):
-    #                 self.maze.print_maze_on_terminal("Generating the maze...")

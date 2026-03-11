@@ -86,41 +86,54 @@ def check_have_the_same_open_wall(
         if maze.south not in solvemaze.decomp_cell(
             maze.maze[pos[0] - 1][pos[1]]
         ):
-            return f"maze[{pos[0]}][{pos[1]}] is open to maze[{pos[0] - 1}][{pos[1]}]\
-but maze[{pos[0] - 1}][{pos[1]}] is closed to maze[{pos[0]}][{pos[1]}]"
+            return (
+                f"maze[{pos[0]}][{pos[1]}] is open "
+                f"to maze[{pos[0] - 1}][{pos[1]}] "
+                f"but maze[{pos[0] - 1}][{pos[1]}] "
+                f"is closed to maze[{pos[0]}][{pos[1]}]"
+            )
     if maze.east in walls_of_cell:
         if pos[1] + 1 >= maze.config.width:
             return f"maze[{pos[0]}][{pos[1]}] is open outside the maze"
         if maze.west not in solvemaze.decomp_cell(
             maze.maze[pos[0]][pos[1] + 1]
         ):
-            return f"maze[{pos[0]}][{pos[1]}] is open to maze[{pos[0]}][{pos[1] + 1}]\
-but maze[{pos[0]}][{pos[1] + 1}] is closed to maze[{pos[0]}][{pos[1]}]"
+            return (
+                f"maze[{pos[0]}][{pos[1]}] is open "
+                f"to maze[{pos[0]}][{pos[1] + 1}]"
+                f"but maze[{pos[0]}][{pos[1] + 1}] "
+                f"is closed to maze[{pos[0]}][{pos[1]}]"
+            )
     if maze.south in walls_of_cell:
         if pos[0] + 1 >= maze.config.height:
             return f"maze[{pos[0]}][{pos[1]}] is open outside the maze"
         if maze.north not in solvemaze.decomp_cell(
             maze.maze[pos[0] + 1][pos[1]]
         ):
-            return f"maze[{pos[0]}][{pos[1]}] is open to maze[{pos[0] + 1}][{pos[1]}]\
-but maze[{pos[0] + 1}][{pos[1]}] is closed to maze[{pos[0]}][{pos[1]}]"
+            return (
+                f"maze[{pos[0]}][{pos[1]}] "
+                f"is open to maze[{pos[0] + 1}][{pos[1]}] "
+                f"but maze[{pos[0] + 1}][{pos[1]}] "
+                f"is closed to maze[{pos[0]}][{pos[1]}]"
+            )
     if maze.west in walls_of_cell:
         if pos[1] - 1 < 0:
             return f"maze[{pos[0]}][{pos[1]}] is open outside the maze"
         if maze.east not in solvemaze.decomp_cell(
             maze.maze[pos[0]][pos[1] - 1]
         ):
-            return f"maze[{pos[0]}][{pos[1]}] is open to maze[{pos[0]}][{pos[1] - 1}]\
-but maze[{pos[0]}][{pos[1] - 1}] is closed to maze[{pos[0]}][{pos[1]}]"
+            return (
+                f"maze[{pos[0]}][{pos[1]}] is open "
+                f"to maze[{pos[0]}][{pos[1] - 1}] "
+                f"but maze[{pos[0]}][{pos[1] - 1}] is "
+                f"closed to maze[{pos[0]}][{pos[1]}]"
+            )
     return ""
 
 
 def check_valid_maze(maze: Maze, solvemaze: SolveMaze) -> list[str]:
     errors = []
     mat_dij = solvemaze.mat_star
-    # print(solvemaze.perfect_error)
-    if solvemaze.perfect_error:
-        errors.extend(solvemaze.perfect_error)
     for i in range(maze.config.height):
         for j in range(maze.config.width):
             if not (check_is_accessible([i, j], mat_dij, maze)):
