@@ -1,6 +1,4 @@
 from source.maze import Maze
-from source.walker_pa import Walker
-from source.walker import kruskal
 from source.find_way import SolveMaze
 import source.parse as parsing
 import random
@@ -168,13 +166,6 @@ def main() -> None:
         random.seed(config.seed)
         x = time()
         maze = Maze(config)
-        if maze.config.animate_generation:
-            print("\033c", end="")
-        if maze.config.perfect and maze.config.alt:
-            kruskal(maze)
-        else:
-            walk = Walker(maze)
-            walk.walk_and_fill()
         generation_time = time() - x
         content = maze.print_maze("hex")
         x = time()

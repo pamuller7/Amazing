@@ -1,6 +1,8 @@
 from source.vector2 import Vector2
 from source.parse import CheckedConfig
 from source.graphics import drawings, themes, Colors, Theme
+from source.walker_pa import Walker
+from source.walker import kruskal
 import time
 
 
@@ -20,6 +22,13 @@ class Maze:
         self.drawing: list[list[int]] = drawings[config.drawing]
         self.theme: Theme = themes[config.theme]
         self.maze: list = self.init_maze()
+        if self.config.animate_generation:
+            print("\033c", end="")
+        if self.config.alt:
+            kruskal(self)
+        else:
+            walk = Walker(self)
+            walk.walk_and_fill()
 
     def at(self, pos: Vector2) -> int:
         value_cell: int = self.maze[pos.y][pos.x]
