@@ -51,6 +51,14 @@ themes: Dict[str, Theme] = {
         Colors.BG_PURPULE.value,
         Colors.BG_RED.value,
     ),
+    "black": Theme(
+        Colors.BG_GREY.value,
+        Colors.BG_GREY.value,
+        Colors.BG_GREY.value,
+        Colors.BG_GREY.value,
+        Colors.BG_GREY.value,
+        Colors.BG_GREY.value,
+    ),
     "green": Theme(
         Colors.BG_GREEN.value,
         Colors.BG_PURPULE.value,
