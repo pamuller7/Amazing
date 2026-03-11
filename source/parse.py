@@ -95,7 +95,7 @@ class KeyParser:
     def parse(
         self, line: str, line_number: int
     ) -> KeyParseResult | ParseError:
-        line = line[len(f"{self.key_name}=") :]
+        line = line[len(f"{self.key_name}="):]
         ret = self.arg.parse(line, line_number)
         if isinstance(ret, ParseError):
             return ParseError(line_number, f"Key: {self.key_name} : {ret.msg}")
