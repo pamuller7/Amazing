@@ -22,12 +22,12 @@ clean:
 	-rm dist -r
 
 lint: install
-	-./venv/bin/python3 -m flake8 source/ main.py 
-	-./venv/bin/python3 -m mypy source/ main.py --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
+	-./venv/bin/python3 -m flake8 mazegen/ main.py 
+	-./venv/bin/python3 -m mypy mazegen/ main.py --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
 build: install
 	./venv/bin/python3 -m build --wheel --outdir dist/
 
 lint-strict: install
-	-./venv/bin/python3 -m flake8 source/ main.py
-	-./venv/bin/python3 -m mypy --strict source/ main.py
+	-./venv/bin/python3 -m flake8 mazegen/ main.py
+	-./venv/bin/python3 -m mypy --strict mazegen/ main.py
