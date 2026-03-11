@@ -299,8 +299,8 @@ not recognized",
             for err in e.errors():
                 try:
                     arr.append(
-                        "Invalid input for " f"{err["loc"][0]}: {err["msg"]}"
+                        "Invalid input for " + f"{err['loc'][0]}: {err['msg']}"
                     )
                 except IndexError:
-                    arr.append(f"Invalid input: {err["msg"]}")
+                    arr.append(f"Invalid input: {err['msg']}")
             raise ValueError("\n".join(arr))
