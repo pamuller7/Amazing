@@ -1,5 +1,5 @@
 run: venv
-	./venv/bin/python3 main.py
+	./venv/bin/python3 main.py config.txt
 
 venv: install
 
@@ -7,9 +7,8 @@ install: .installed
 
 .installed:
 	python3 -m venv venv
-# 	./venv/bin/python3 -m pip install ./mlx_CLXV/python/dist/mlx-2.2-py3-none-any.whl
+	./venv/bin/python3 -m pip install mazegen-0.1.0.tar.gz
 	touch .installed
-# 	./venv/bin/python3 -m pip install mlx.whl
 
 debug: install
 	python3 -m pdb main.py
@@ -18,6 +17,7 @@ clean:
    # Remove temporary files or caches (e.g., __pycache__, .mypy_cache)
 	-rm __pycache__ -r
 	-rm .mypy_cache -r
+	-rm .installed
 	-rm venv -r
 	-rm dist -r
 
