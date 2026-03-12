@@ -112,7 +112,7 @@ the makefile will create a venv with poetry and run the program in poetry.
 ### How to reuse the package
 
 Example:
-```from mazegen import MazeGenerator, SolveMaze, CheckedConfig
+```from mazegen import MazeGenerator, CheckedConfig
 conf = {
             "width": 20,
             "height": 20,
