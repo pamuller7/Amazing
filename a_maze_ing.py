@@ -1,9 +1,7 @@
 from mazegen.maze import Maze
-from mazegen.find_way import SolveMaze
 import mazegen.parse as parsing
 import random
 import sys
-from time import time
 from typing import Any
 
 
@@ -73,17 +71,10 @@ def print_header(maze: Maze) -> None:
 
     Args:
         maze: The ``Maze`` instance that was generated.
-        generation_time: Seconds elapsed during maze generation.
-        solving_time: Seconds elapsed during maze solving.
     """
     print("\033c", end="")
     if not maze.can_draw_42():
         print("ERROR: The maze is too small to be printed")
-    animation = (
-        "with animation "
-        if maze.config.animate_generation or maze.config.animate_shortest_way
-        else ""
-    )
     print(f"Seed used: {maze.config.seed}")
     print(f"Alt: {maze.config.alt}")
     print(f"Perfect: {maze.config.perfect}")
@@ -97,8 +88,6 @@ def handle_interaction(maze: Maze) -> bool:
 
     Args:
         maze: The ``Maze`` instance to display and interact with.
-        generation_time: Seconds elapsed during maze generation.
-        solving_time: Seconds elapsed during maze solving.
 
     Returns:
         ``True`` if the caller should regenerate the maze with the
@@ -205,12 +194,18 @@ def main() -> None:
         config.seed = hex(random.randint(16**16, 16**17))
     while True:
         random.seed(config.seed)
-        maze = Maze(config)
-        if maze.config.interactive and handle_interaction(
-            maze):
+        try:
+            maze = Maze(config)
+        except ValueError as e:
+            print(f"Maze error: {e}")
+            return
+        if maze.config.interactive and handle_interaction(maze):
             continue
         return
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("Exiting program...")

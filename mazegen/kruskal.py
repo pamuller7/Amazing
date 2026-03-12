@@ -109,8 +109,6 @@ class Kruskal:
         Returns:
             The corresponding unit vector (e.g. ``Vector2(0, -1)`` for north).
 
-        Raises:
-            ValueError: If *move* is not a recognised direction bitmask.
         """
         if move == maze.north:
             return Vector2(0, -1)
@@ -120,7 +118,7 @@ class Kruskal:
             return Vector2(1, 0)
         if move == maze.west:
             return Vector2(-1, 0)
-        raise ValueError("direction")
+        return Vector2(0, 0)
 
     @staticmethod
     def decomp_cell(maze: Maze, cell: int) -> list:

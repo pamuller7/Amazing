@@ -1,5 +1,5 @@
 run: venv
-	./venv/bin/python3 -m poetry run python3.10 main.py config.txt
+	./venv/bin/python3 -m poetry run python3.10 a_maze_ing.py config.txt
 
 venv: install
 
@@ -13,7 +13,7 @@ install: .installed
 	touch .installed
 
 debug: install
-	python3 -m pdb main.py
+	python3 -m pdb a_maze_ing.py
 
 clean:
 	-rm __pycache__ -r
@@ -23,12 +23,12 @@ clean:
 	-rm dist -r
 
 lint: install
-	-./venv/bin/python3 -m poetry run flake8 mazegen/ main.py 
-	-./venv/bin/python3 -m poetry run mypy mazegen/ main.py --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
+	-./venv/bin/python3 -m poetry run flake8 mazegen/ a_maze_ing.py 
+	-./venv/bin/python3 -m poetry run mypy mazegen/ a_maze_ing.py --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
 build: install
 	./venv/bin/python3 -m poetry build
 
 lint-strict: install
-	-./venv/bin/python3 -m poetry run flake8 mazegen/ main.py
-	-./venv/bin/python3 -m poetry run mypy --strict mazegen/ main.py
+	-./venv/bin/python3 -m poetry run flake8 mazegen/ a_maze_ing.py
+	-./venv/bin/python3 -m poetry run mypy --strict mazegen/ a_maze_ing.py

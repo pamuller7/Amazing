@@ -6,12 +6,6 @@ from mazegen.graphics import drawings, themes, Colors, Theme
 import time
 
 
-class MazeError(Exception):
-    """Raised when the maze cannot be constructed with the given parameters."""
-
-    pass
-
-
 class Maze:
     """A rectangular grid maze stored as a bit-encoded integer matrix.
 
@@ -77,7 +71,6 @@ class Maze:
         content += solver.output_shortest_way()
         with open(self.config.output_file, "w") as f:
             f.write(content)
-        
 
     def at(self, pos: Vector2) -> int:
         """Return the raw cell value at *pos*.
@@ -150,65 +143,55 @@ class Maze:
         """
         line_draw = len(self.drawing)
         col_draw = len(self.drawing[0])
-        if self.config.width > 0 and self.config.height > 0:
-            maze = [
-                [0b1111 for _ in range(self.config.width)]
-                for _ in range(self.config.height)
-            ]
-            can_draw = self.can_draw_42()
-            if not can_draw:
-                print(
-                    "ERROR:",
-                    "The maze is too small for the drawing to be printed",
-                )
-            for line in range(self.config.height):
-                for col in range(self.config.width):
-                    if (
-                        can_draw
-                        and line >= int(self.config.height / 2 - line_draw / 2)
-                        and line
-                        < line_draw
-                        + int(self.config.height / 2 - line_draw / 2)
-                        and col >= int(self.config.width / 2 - col_draw / 2)
-                        and col
-                        < col_draw + int(self.config.width / 2 - col_draw / 2)
-                        and self.drawing[
-                            line
-                            - int(
-                                self.config.height / 2
-                                + line_draw
-                                - line_draw / 2
-                            )
-                        ][
-                            col
-                            - int(
-                                self.config.width / 2 + col_draw - col_draw / 2
-                            )
-                        ]
-                        == 1
-                    ):
-                        if Vector2(col, line) == Vector2.from_iter(
-                            self.config.entry
-                        ):
-                            raise ValueError(
-                                "Entry = [{},{}] is in the drawing".format(
-                                    line, col
-                                )
-                            )
-                        elif Vector2(col, line) == Vector2.from_iter(
-                            self.config.exit
-                        ):
-                            raise ValueError(
-                                "Exit = [{},{}] is in the drawing".format(
-                                    line, col
-                                )
-                            )
-                        maze[line][col] = 0b11111
-                        self.nb_cell_to_fill -= 1
-        else:
-            raise MazeError(
-                "Invalid information: width and height must be > 0"
+        maze = [
+            [0b1111 for _ in range(self.config.width)]
+            for _ in range(self.config.height)
+        ]
+        can_draw = self.can_draw_42()
+        if not can_draw:
+            print(
+                "ERROR:",
+                "The maze is too small for the drawing to be printed",
             )
+        for line in range(self.config.height):
+            for col in range(self.config.width):
+                if (
+                    can_draw
+                    and line >= int(self.config.height / 2 - line_draw / 2)
+                    and line
+                    < line_draw + int(self.config.height / 2 - line_draw / 2)
+                    and col >= int(self.config.width / 2 - col_draw / 2)
+                    and col
+                    < col_draw + int(self.config.width / 2 - col_draw / 2)
+                    and self.drawing[
+                        line
+                        - int(
+                            self.config.height / 2 + line_draw - line_draw / 2
+                        )
+                    ][
+                        col
+                        - int(self.config.width / 2 + col_draw - col_draw / 2)
+                    ]
+                    == 1
+                ):
+                    if Vector2(col, line) == Vector2.from_iter(
+                        self.config.entry
+                    ):
+                        raise ValueError(
+                            "Entry = [{},{}] is in the drawing".format(
+                                line, col
+                            )
+                        )
+                    elif Vector2(col, line) == Vector2.from_iter(
+                        self.config.exit
+                    ):
+                        raise ValueError(
+                            "Exit = [{},{}] is in the drawing".format(
+                                line, col
+                            )
+                        )
+                    maze[line][col] = 0b11111
+                    self.nb_cell_to_fill -= 1
         return maze
 
     def can_draw_42(self) -> bool:
