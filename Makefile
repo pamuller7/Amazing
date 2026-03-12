@@ -19,6 +19,8 @@ debug: install
 	python3 -m pdb a_maze_ing.py
 
 clean:
+	-rm mazegen/__pycache__ -r
+	-rm tests/__pycache__ -r
 	-rm __pycache__ -r
 	-rm .mypy_cache -r
 	-rm .installed
