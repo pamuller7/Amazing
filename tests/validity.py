@@ -1,8 +1,6 @@
 from unittest import TestCase
 import mazegen.parse as parse
 from mazegen.maze import MazeGenerator
-from mazegen.kruskal import Kruskal
-from mazegen.brutal_path import Walker
 from mazegen.maze_checker import check_valid_maze
 from mazegen.find_way import SolveMaze
 
