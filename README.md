@@ -27,7 +27,7 @@ A-Maze-ing is a maze generator in Python, That requires a default configuration 
 
 two type of mazes can be generated:
 - perfect: A maze is perfect if there is only one path between a position and an other. other are dead ends.
-- unperfect: Multiple path to link the entry to the exit. 
+- unperfect: Multiple path to link the entry to the exit.
 
 ### How to read the output file
 
@@ -79,7 +79,7 @@ To find the shortest way, we use the Dijkstra method.
 the idea is to calculate from each cell its distance from the exit.
 the maze:
 ```
-maze:		|	it's Dijkstra equivalent:
+Maze:		|	The Dijkstra equivalent:
 _________	|	_________
 |I|___  |	|	|0 9 8 7|
 |___  |	|	|	|1 2 3 6|
@@ -95,9 +95,11 @@ If this one is less faster than the a*, it's still interesting because after we 
 ## Instructions
 
 ### How to run
-```
-make run
-```
+
+the makefile will create a venv with poetry and run the program in poetry.
+
+- make install: will install the venv, install poetry in it, and then install the dependecies with poetry (using pyproject.toml)
+- make run: will run the program with poetry run python3 a-maze-ing.py config.txt. Here the config file is necessarly named "config.txt".
 
 
 ### How to reuse the package
@@ -118,11 +120,10 @@ conf = {
 }													
 conf = CheckedConfig(**conf)							| CheckedConfig checks if the keys are valid and returns a checkedconfig object, necessary for maze.
 generated_maze = Maze(conf)								| generated_maze is the object stocking all the generated maze (generated_maze.maze will be the binary maze)
-generated_maze.print_maze()
+generated_maze.print_maze()                             | Display the maze on the terminal
 
 proc = SolveMaze(generated_maze).output_shortest_way()	| Once the maze is initialised, output shortest way will return the directions you must follow to get from entry to exit
 print(proc)
-
 ```
 
 

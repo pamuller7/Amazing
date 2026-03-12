@@ -151,7 +151,7 @@ def main() -> None:
         with open(filename, "r") as f:
             arg = f.read()
     except FileNotFoundError:
-        print("File not found, ", end="")
+        print(f"File not found: {filename}", end="")
         return
     try:
         config: parsing.CheckedConfig = parsing.Parser.parse(arg)

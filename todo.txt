@@ -3,11 +3,12 @@
 [x] - changer dessin pendant interactive - menu de l'interactive (astrale)
 [x] parse: - correction: demande flags minuscules ou maj (ALT=True et alt=True) (astrale)
 [x] maze: - opt: doubler taile maze pr meileur affichage (printmze) (pl)
+[x] final:	rendu:	- preparer pour le .whl	- tar.gz a la fin pour pouvoir rebuild (correction)
+[x] reparer animation chemin
+[x] - organiser main (fin a voir)
 
-- reparer animation chemin
 
-main:
-- organiser main (fin a voir)
+main: 
 - renomer le main (a_maze_ing.py ou le truc dans le style) (gros travail en duo a venir)
 
 algo(maze et walker et find_way) (pl)
@@ -16,11 +17,4 @@ algo(maze et walker et find_way) (pl)
 
 tests: (astrale)
 - tester generation labyrinthe
-
-
-final:
-	rendu:
-	- preparer pour le .whl
-	- tar.gz a la fin pour pouvoir rebuild (correction)
-
 	-README
