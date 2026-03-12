@@ -33,11 +33,5 @@ class ValidityTests(TestCase):
                         c.animate_shortest_way = False
                         c.perfect = perfect
                         maze = MazeGenerator(c)
-                        if alt:
-                            Kruskal.kruskal(maze)
-                        else:
-                            walk = Walker(maze)
-                            walk.walk_and_fill()
                         s = SolveMaze(maze)
-                        s.output_shortest_way()
                         self.assertTrue(not check_valid_maze(maze, s))

@@ -1,6 +1,9 @@
 run: venv
 	./venv/bin/python3 -m poetry run python3.10 a_maze_ing.py config.txt
 
+test: venv
+	./venv/bin/python3 -m poetry run python3.10 -m unittest tests/parsing.py tests/validity.py
+
 venv: install
 
 install: .installed

@@ -209,7 +209,7 @@ class Kruskal:
                 for x in range(maze.config.width):
                     try:
                         y = lines.pop(randint(0, len(lines) - 1))
-                    except IndexError:
+                    except (IndexError, ValueError):
                         continue
                     pos = Vector2(x, y)
                     if count < max(maze.config.height, maze.config.width):
