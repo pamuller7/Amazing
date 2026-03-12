@@ -121,7 +121,7 @@ class Kruskal:
         return Vector2(0, 0)
 
     @staticmethod
-    def decomp_cell(maze: MazeGenerator, cell: int) -> list:
+    def decomp_cell(maze: MazeGenerator, cell: int) -> list[int]:
         """Return the open-passage directions for a raw cell value.
 
         A direction is open when its wall bit is cleared (0).

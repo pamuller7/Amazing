@@ -3,7 +3,7 @@ from mazegen.find_way import SolveMaze
 
 
 def check_is_accessible(
-    pos: list, mat_dij: list[list[int]], maze: MazeGenerator
+    pos: list[int], mat_dij: list[list[int]], maze: MazeGenerator
 ) -> bool:
     """Return whether the cell at *pos* can be reached from the exit.
 
@@ -29,7 +29,7 @@ def check_is_accessible(
 
 
 def check_is_open_area(
-    pos: list, maze: MazeGenerator, solvemaze: SolveMaze
+    pos: list[int], maze: MazeGenerator, solvemaze: SolveMaze
 ) -> bool:
     """Return whether *pos* is the top-left corner of a fully open 3x3 area.
 
@@ -106,7 +106,7 @@ def check_is_open_area(
 
 
 def check_have_the_same_open_wall(
-    pos: list, maze: MazeGenerator, solvemaze: SolveMaze
+    pos: list[int], maze: MazeGenerator, solvemaze: SolveMaze
 ) -> str:
     """Check that every open wall of the cell at *pos* is reciprocated.
 

@@ -39,7 +39,7 @@ class Walker:
         self.line_checked = 0
         self.nb_cell_to_fill: int = self.maze.nb_cell_to_fill
 
-    def is_a_possible_way(self, wall_to_open: int, pos: list) -> bool:
+    def is_a_possible_way(self, wall_to_open: int, pos: list[int]) -> bool:
         """Return whether the neighbour in direction *wall_to_open*
         is unexplored.
 
@@ -70,7 +70,7 @@ class Walker:
             and self.maze.maze[try_pos[0]][try_pos[1]] == 0b1111
         )
 
-    def loop_the_path(self, wall_to_open: int, pos: list) -> bool:
+    def loop_the_path(self, wall_to_open: int, pos: list[int]) -> bool:
         """Return whether a loop wall can be opened at the current dead end.
 
         Unlike ``is_a_possible_way``, this method allows breaking a wall
@@ -217,7 +217,7 @@ class Walker:
 
     def find_incomplete_cell(
         self, tab_line: list[int], tab_col: list[int], index: list[int]
-    ) -> list:
+    ) -> list[int]:
         """Scan the maze for the next cell that can still be carved.
 
         Iterates through the rows in *tab_line* and columns in *tab_col*,

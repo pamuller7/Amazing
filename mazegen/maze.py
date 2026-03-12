@@ -56,10 +56,10 @@ class MazeGenerator:
         self.south: int = 0b1011
         self.west: int = 0b0111
         self.nb_cell_to_fill: int = config.width * config.height
-        self.dir: list = [self.north, self.west, self.south, self.east]
+        self.dir: list[int] = [self.north, self.west, self.south, self.east]
         self.drawing: list[list[int]] = drawings[config.drawing]
         self.theme: Theme = themes[config.theme]
-        self.maze: list = self.init_maze()
+        self.maze: list[list[int]] = self.init_maze()
         if self.config.alt:
             Kruskal.kruskal(self)
         else:
@@ -227,13 +227,13 @@ class MazeGenerator:
         content = ""
         if convert == "hex":
             hexa = "0123456789ABCDEF"
-            maze: list[list] = [[] for _ in range(self.config.height + 1)]
+            maze: list[list[str]] = [[] for _ in range(self.config.height + 1)]
             for line in range(self.config.height):
                 for col in range(self.config.width):
                     maze[line].append(hexa[self.maze[line][col] % 16])
             for tab in maze:
-                for cell in tab:
-                    content += cell
+                for str_cell in tab:
+                    content += str_cell
                 content += "\n"
         else:
             print()

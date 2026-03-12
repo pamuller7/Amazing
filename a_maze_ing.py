@@ -6,7 +6,7 @@ from typing import Any
 
 
 def handle_parse_one(
-    maze: MazeGenerator, options: list, user_input: int
+    maze: MazeGenerator, options: list[Any], user_input: int
 ) -> bool:
     """Apply a single interactive configuration change to the maze.
 

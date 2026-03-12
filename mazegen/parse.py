@@ -336,7 +336,7 @@ class DictKeysParser(ArgParser):
         allowed: List of accepted string values.
     """
 
-    def __init__(self, allowed: KeysView) -> None:
+    def __init__(self, allowed: KeysView[str]) -> None:
         """Initialise with the collection of allowed string values.
 
         Args:
