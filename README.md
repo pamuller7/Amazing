@@ -111,6 +111,8 @@ the makefile will create a venv with poetry and run the program in poetry.
 
 ### How to reuse the package
 
+In a venv, pip install mazegen-0.1.0.tar.gz to access the mazegen module.
+
 Example:
 ```from mazegen import MazeGenerator, CheckedConfig
 conf = {
