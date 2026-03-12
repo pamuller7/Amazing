@@ -114,7 +114,8 @@ the makefile will create a venv with poetry and run the program in poetry.
 In a venv, pip install mazegen-0.1.0.tar.gz to access the mazegen module.
 
 Example:
-```from mazegen import MazeGenerator, CheckedConfig
+```py
+from mazegen import MazeGenerator, CheckedConfig
 conf = {
             "width": 20,
             "height": 20,
@@ -134,7 +135,7 @@ lab = MazeGenerator(conf)
 ```
 
 Explanation:
-```
+```py
 from mazegen import MazeGenerator, CheckedConfig
 conf = {
             "width": 20,                                          |
