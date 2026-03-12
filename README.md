@@ -18,12 +18,12 @@
 |maze.py|🟨|✅||
 |brutal_path.py||✅|
 |kruskal.py|✅|||
-|main.py|✅|🟨|
+|a_maze_ing.py|✅|🟨|
 
 
 ## Description
 
-A-Maze-ing is a maze generator in Python, That requires a default configuration file to create a maze, and writes in a file -mentionned by the configration- the hexadecimal value of each walls, the entry and exit position and the procedure to find the shortest path.
+A-Maze-ing is a maze generator module in Python, That requires a default configuration file to create a maze, and writes in a file -mentionned by the configration- the hexadecimal value of each walls, the entry and exit position and the procedure to find the shortest path.
 
 two type of mazes can be generated:
 - perfect: A maze is perfect if there is only one path between a position and an other. other are dead ends.
@@ -99,12 +99,12 @@ If this one is less faster than the a*, it's still interesting because after we 
 the makefile will create a venv with poetry and run the program in poetry.
 
 - make install: will install the venv, install poetry in it, and then install the dependecies with poetry (using pyproject.toml)
-- make run: will run the program with poetry run python3 a-maze-ing.py config.txt. Here the config file is necessarly named "config.txt".
+- make run: will run the program with poetry run python3 a_maze_ing.py config.txt. Here the config file is necessarly named "config.txt".
 
 
 ### How to reuse the package
 ```
-from mazegen.maze import Maze
+from mazegen.maze import MazeGenerator
 from mazegen.parse import CheckedConfig
 from mazegen.find_way import SolveMaze 
 conf = {											
@@ -118,8 +118,8 @@ conf = {
             "animate_generation": False,				|
             "theme": "red"								|
 }													
-conf = CheckedConfig(**conf)							| CheckedConfig checks if the keys are valid and returns a checkedconfig object, necessary for maze.
-generated_maze = Maze(conf)								| generated_maze is the object stocking all the generated maze (generated_maze.maze will be the binary maze)
+conf = CheckedConfig(**conf)							| CheckedConfig checks if the keys are valid and returns a checkedconfig object, necessary for MazeGenerator.
+generated_maze = MazeGenerator(conf)								| generated_maze is the object stocking all the generated maze (generated_maze.maze will be the binary maze)
 generated_maze.print_maze()                             | Display the maze on the terminal
 
 proc = SolveMaze(generated_maze).output_shortest_way()	| Once the maze is initialised, output shortest way will return the directions you must follow to get from entry to exit
