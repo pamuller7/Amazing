@@ -1,5 +1,5 @@
 from mazegen.vector2 import Vector2
-from random import shuffle, choice
+from random import shuffle, choice, randint
 
 
 class DisjointSet:
@@ -173,6 +173,13 @@ class Kruskal:
                 ]
                 walls.extend([(Vector2(x, y), w) for w in cell_walls])
         shuffle(walls)
+        rev = {
+            maze.east: maze.west,
+            maze.west: maze.east,
+            maze.south: maze.north,
+            maze.north: maze.south,
+        }
+
         for i, (pos, wall) in enumerate(walls):
             cells_dividing: list[Vector2] = [
                 pos,
@@ -197,36 +204,40 @@ class Kruskal:
                     maze.print_maze_on_terminal("Kruskal generation...", False)
         if not maze.config.perfect:
             count = 0
-            shuffle(walls)
-            for pos, wall in walls:
-                if count < max(maze.config.height, maze.config.width):
-                    cell_open_to = Kruskal.decomp_cell(maze, wall)
-                    if (
-                        len(cell_open_to) < 2
-                        and maze.maze[pos.y][pos.x] < 0b1111
-                    ):
-                        open_wall = [
-                            x for x in maze.dir if x not in cell_open_to
-                        ]
-                        shuffle(open_wall)
-                        wall = choice(open_wall)
-                        next_cell = pos + Kruskal.get_direction(maze, wall)
-                        if (
-                            maze.is_in_bound(next_cell)
-                            and maze.maze[next_cell.y][next_cell.x] < 0b1111
-                        ):
-                            maze.put_in_maze(pos, wall)
-                            rev = {
-                                maze.east: maze.west,
-                                maze.west: maze.east,
-                                maze.south: maze.north,
-                                maze.north: maze.south,
-                            }
-                            maze.put_in_maze(next_cell, rev[wall])
-                            count += 1
-                        if maze.config.animate_generation:
-                            maze.print_maze_on_terminal(
-                                "Kruskal generation...", False
-                            )
-                else:
-                    break
+            while count == 0:
+                lines = list(range(maze.config.height))
+                for x in range(maze.config.width):
+                    try:
+                        y = lines.pop(randint(0, len(lines) - 1))
+                    except IndexError:
+                        continue
+                    pos = Vector2(x, y)
+                    if count < max(maze.config.height, maze.config.width):
+                        cell_open_to = Kruskal.decomp_cell(
+                            maze, maze.maze[y][x]
+                        )
+                        if len(cell_open_to) < 2 and maze.at(pos) < 0b1111:
+                            open_wall = [
+                                x for x in maze.dir if x not in cell_open_to
+                            ]
+                            wall = choice(open_wall)
+                            next_cell = pos + Kruskal.get_direction(maze, wall)
+                            if (
+                                maze.is_in_bound(next_cell)
+                                and maze.at(next_cell) < 0b1111
+                                and (
+                                    maze.at(next_cell) & rev[wall]
+                                    != maze.at(next_cell)
+                                    or maze.at(pos) & wall != maze.at(pos)
+                                )
+                            ):
+                                maze.put_in_maze(pos, wall)
+
+                                maze.put_in_maze(next_cell, rev[wall])
+                                count += 1
+                            if maze.config.animate_generation:
+                                maze.print_maze_on_terminal(
+                                    "Kruskal generation...", False
+                                )
+                    else:
+                        break
