@@ -154,20 +154,20 @@ lab = MazeGenerator(conf)                                         | generated_ma
 The config text (its name doesn't matter as long as it's given as arguments) should at least contain the mandatory flags for the program to work.
 ```
 ==================================PROGRAMS MANDATORY==================================
-WIDTH: an int between 0 and 1000
-HEIGHT: an int between 0 and 1000 
-ENTRY: coord (x,y) of the entry
-EXIT: coord (x,y) of the exit
-OUTPUT_FILE: file name of the file containing the hexa maze and the shortest way to link entry to exit
-PERFECT: bool, saying if the maze should be perfect or not
+WIDTH= an int between 0 and 1000
+HEIGHT= an int between 0 and 1000 
+ENTRY= coord (x,y) of the entry
+EXIT= coord (x,y) of the exit
+OUTPUT_FILE= file name of the file containing the hexa maze and the shortest way to link entry to exit
+PERFECT= bool, saying if the maze should be perfect or not
 
 ===============================PROGRAMS FACULTATIVE FLAGS===============================
-SEED: int, the seed for random, to generate the same maze
-ANIMATE_GENERATION: bool (Default False), if you want the animation of the maze generation
-ANIMATE_SHORTEST_WAY: bool (Default False), if you want the animation of the path finding
-INTERACTIVE: bool (Default False), if you want the interactive interface
-THEME: str (Default squeleton), for choosing a color theme for the output themes available: red, squeleton, rgb, green
-DRAWING: str (Default 42), to choose a different drawing in the maze drawings available: 42, smiley, pac-man, no_drawing
+SEED= int, the seed for random, to generate the same maze
+ANIMATE_GENERATION= bool (Default False), if you want the animation of the maze generation
+ANIMATE_SHORTEST_WAY= bool (Default False), if you want the animation of the path finding
+INTERACTIVE= bool (Default False), if you want the interactive interface
+THEME= str (Default squeleton), for choosing a color theme for the output themes available: red, squeleton, rgb, green
+DRAWING= str (Default 42), to choose a different drawing in the maze drawings available: 42, smiley, pac-man, no_drawing
 ```
 INTERACTIVE = main only
 
