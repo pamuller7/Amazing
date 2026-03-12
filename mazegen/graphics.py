@@ -3,6 +3,19 @@ from typing import Dict, List
 
 
 class Theme:
+    """A collection of ANSI colour codes for each visual element of the maze.
+
+    Attributes:
+        wall_color: Background colour used for solid wall cells.
+        draw_color: Background colour used for decorative drawing cells.
+        entry_color: Background colour used for the maze entry cell.
+        head_solver_color: Background colour for the leading cell of the
+            solver path animation.
+        tail_solver_color: Background colour for already-visited cells on
+            the solver path.
+        exit_color: Background colour used for the maze exit cell.
+    """
+
     def __init__(
         self,
         wall_color: str,
@@ -12,6 +25,16 @@ class Theme:
         tail_solver_color: str,
         exit_color: str,
     ) -> None:
+        """Initialise the theme with one ANSI colour string per element.
+
+        Args:
+            wall_color: ANSI escape code for wall cells.
+            draw_color: ANSI escape code for embedded drawing cells.
+            entry_color: ANSI escape code for the entry cell.
+            head_solver_color: ANSI escape code for the solver head.
+            tail_solver_color: ANSI escape code for the solver tail.
+            exit_color: ANSI escape code for the exit cell.
+        """
         self.wall_color = wall_color
         self.draw_color = draw_color
         self.entry_color = entry_color
@@ -21,6 +44,13 @@ class Theme:
 
 
 class Colors(Enum):
+    """ANSI escape codes for terminal foreground and background colours.
+
+    Members whose names start with ``BG_`` set the background colour;
+    the remaining members set the foreground colour or a text attribute.
+    ``ENDC`` resets all attributes to the terminal default.
+    """
+
     BG_GREY = "\033[40m"
     BG_RED = "\033[41m"
     BG_GREEN = "\033[42m"

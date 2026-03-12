@@ -8,6 +8,23 @@ from typing import Any
 
 
 def handle_parse_one(maze: Maze, options: list, user_input: int) -> bool:
+    """Apply a single interactive configuration change to the maze.
+
+    Prompts the user for a new value for the selected configuration key,
+    validates it, and updates ``maze.config`` in place.
+
+    Args:
+        maze: The current ``Maze`` instance whose config will be mutated.
+        options: The full list of menu options (strings and
+            ``KeyParser`` instances) as displayed to the user.
+        user_input: Zero-based index of the chosen option inside *options*.
+
+    Returns:
+        ``True`` in all cases (signals the main loop to redraw the maze).
+
+    Raises:
+        TypeError: If the selected option is not a ``KeyParser``.
+    """
     parser: parsing.KeyParser = options[user_input]
     if not isinstance(parser, parsing.KeyParser):
         raise TypeError(f"expected `KeyParser` got {type(parser)}")
@@ -51,6 +68,16 @@ def handle_parse_one(maze: Maze, options: list, user_input: int) -> bool:
 def print_header(
     maze: Maze, generation_time: float, solving_time: float
 ) -> None:
+    """Clear the terminal and print the run summary header.
+
+    Displays the seed, alt flag, perfect flag, and the time taken to
+    generate and solve the maze.
+
+    Args:
+        maze: The ``Maze`` instance that was generated.
+        generation_time: Seconds elapsed during maze generation.
+        solving_time: Seconds elapsed during maze solving.
+    """
     print("\033c", end="")
     if not maze.can_draw_42():
         print("ERROR: The maze is too small to be printed")
@@ -70,7 +97,20 @@ def print_header(
 def handle_interaction(
     maze: Maze, generation_time: float, solving_time: float
 ) -> bool:
-    """Returns False if you need to exit"""
+    """Run one iteration of the interactive terminal menu.
+
+    Prints the maze, then enters a loop offering the user choices to
+    regenerate, toggle the solution path, tweak config options, or quit.
+
+    Args:
+        maze: The ``Maze`` instance to display and interact with.
+        generation_time: Seconds elapsed during maze generation.
+        solving_time: Seconds elapsed during maze solving.
+
+    Returns:
+        ``True`` if the caller should regenerate the maze with the
+        (possibly updated) config; ``False`` if the user chose to quit.
+    """
     print_header(maze, generation_time, solving_time)
     count_path = 0
     if maze.config.animate_shortest_way:
@@ -135,6 +175,14 @@ def handle_interaction(
 
 
 def main() -> None:
+    """Parse CLI arguments, load config, generate and solve the maze.
+
+    Expects exactly one positional argument: the path to a plain-text
+    configuration file.  Writes the hex-encoded maze and its solution to
+    the output file specified inside that config.  When ``INTERACTIVE``
+    is enabled the function loops, redrawing the maze after each user
+    action, until the user quits.
+    """
     if len(sys.argv) > 2:
         print(
             "ERROR: Too many args,"

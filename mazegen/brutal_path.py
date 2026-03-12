@@ -4,9 +4,35 @@ import random
 
 
 class Walker:
+    """Carves passages through a ``Maze`` using a randomised
+    walk algorithm.
+
+    Starting from a random cell, the walker repeatedly moves to an
+    unexplored neighbour, opening the shared wall as it goes.  When the
+    walker reaches a dead end, ``find_incomplete_cell`` locates the next
+    unexplored cell and teleports the walker there.  The process repeats
+    until every non-drawing cell has been visited.
+
+    For imperfect mazes (``config.perfect == False``) an additional loop
+    wall is optionally opened at each dead end.
+
+    Attributes:
+        maze: The ``Maze`` instance being generated.
+        pos_line: Current row index of the walker.
+        pos_col: Current column index of the walker.
+        line_checked: Tracks how many rows have been scanned during
+            incomplete-cell searches (unused externally).
+        nb_cell_to_fill: Number of cells that still need to be carved.
+    """
+
     from mazegen.maze import Maze
 
-    def __init__(self, maze: Maze):
+    def __init__(self, maze: Maze) -> None:
+        """Initialise the walker for a given maze.
+
+        Args:
+            maze: The ``Maze`` instance to generate paths in.
+        """
         self.maze = maze
         self.pos_line = 0
         self.pos_col = 0
@@ -14,12 +40,22 @@ class Walker:
         self.nb_cell_to_fill: int = self.maze.nb_cell_to_fill
 
     def is_a_possible_way(self, wall_to_open: int, pos: list) -> bool:
-        """Output a bool, telling if the position decribed by pos
-        is unexplored and in bound of the maze.
+        """Return whether the neighbour in direction *wall_to_open*
+        is unexplored.
 
-            wall_to_open: int = the wall we are trying to open
-            pos: int = the current position in the maze
-            --> Usefull to check if a wall can be broken"""
+        An unexplored cell has value ``0b1111`` (all walls intact) and lies
+        within the maze boundaries.
+
+        Args:
+            wall_to_open: One of the four direction bitmasks
+                (``maze.north``, ``maze.east``, ``maze.south``,
+                ``maze.west``).
+            pos: ``[line, col]`` of the current cell.
+
+        Returns:
+            ``True`` if the neighbouring cell in the given direction is
+            in bounds and has not yet been carved.
+        """
         try_pos = [0, 0]
         if wall_to_open == self.maze.north:
             try_pos = [pos[0] - 1, pos[1]]
@@ -35,13 +71,21 @@ class Walker:
         )
 
     def loop_the_path(self, wall_to_open: int, pos: list) -> bool:
-        """sensibly like 'is_a_possible_way', except this one
-        authorize to break a wall of an already explored cell
+        """Return whether a loop wall can be opened at the current dead end.
 
-            wall_to_open: int = the wall we are trying to open
-            pos: int = the current position in the maze
-            --> Usefull to create a loop, for inperfect mazes"""
+        Unlike ``is_a_possible_way``, this method allows breaking a wall
+        into an already-explored (carved) cell, which creates a loop and
+        produces an imperfect maze.  It also checks that the wall in the
+        given direction is still intact before attempting the opening.
 
+        Args:
+            wall_to_open: Direction bitmask to test.
+            pos: ``[line, col]`` of the current cell.
+
+        Returns:
+            ``True`` if the wall is still present and the neighbour is an
+            already-explored, in-bounds cell.
+        """
         try_pos = [-1, -1]
         if (
             wall_to_open == self.maze.north
@@ -71,9 +115,15 @@ class Walker:
         )
 
     def update_dir(self, way_to_open: int) -> None:
-        """break the wall of the cell's neighboors
-        way_to_open: int = the wall we want to break"""
+        """Open *way_to_open* wall of the current cell and advance the walker.
 
+        Breaks the reciprocal wall of the neighbouring cell, moves
+        ``pos_line`` / ``pos_col`` to that neighbour, and decrements
+        ``nb_cell_to_fill``.
+
+        Args:
+            way_to_open: Direction bitmask indicating which wall to open.
+        """
         if way_to_open == self.maze.north:
             self.maze.put_in_maze(
                 Vector2(self.pos_col, self.pos_line - 1), self.maze.south
@@ -101,10 +151,14 @@ class Walker:
         self.nb_cell_to_fill -= 1
 
     def travel_in_maze(self, dir: int) -> None:
-        """Take an int (north 0b0111, south 0b1101 etc...) and change the pos
-        of self
-            dir: int = direction (north, south etc...)"""
+        """Move the walker one step in direction *dir* without carving a wall.
 
+        Updates ``pos_line`` and ``pos_col`` to reflect the new position.
+
+        Args:
+            dir: Direction bitmask (``maze.north``, ``maze.south``,
+                ``maze.east``, or ``maze.west``).
+        """
         if dir == self.maze.north:
             self.pos_line -= 1
         elif dir == self.maze.south:
@@ -115,10 +169,15 @@ class Walker:
             self.pos_col += 1
 
     def draw_path(self) -> int:
-        """draw a random path, starting from the current position,
-        breaking random walls of unexplored cells
-            return the length of the path we created"""
+        """Carve a random path from the current position until a dead end.
 
+        Repeatedly chooses a random unexplored neighbour, opens the shared
+        wall, and advances the walker.  For imperfect mazes, also tries to
+        open one loop wall when the dead end is reached.
+
+        Returns:
+            The number of cells carved during this path segment.
+        """
         path_length = 0
         possible_ways = [
             x
@@ -159,10 +218,23 @@ class Walker:
     def find_incomplete_cell(
         self, tab_line: list[int], tab_col: list[int], index: list[int]
     ) -> list:
-        """checker, as the maze is randomly created, avoid that some parts are
-        forgotten.
-            return the pos of cell that are still unexplored.
-            pos: list = the position from which we start the check"""
+        """Scan the maze for the next cell that can still be carved.
+
+        Iterates through the rows in *tab_line* and columns in *tab_col*,
+        returning the ``[line, col]`` of the first cell that is already
+        partially carved (``< 0b1111``) *and* has at least one unexplored
+        neighbour.  Updates ``index[0]`` with the number of rows scanned.
+
+        Args:
+            tab_line: Row indices to search, in priority order.
+            tab_col: Column indices to search within each row.
+            index: Single-element list used to pass the scan progress back
+                to the caller.
+
+        Returns:
+            ``[line, col]`` of the first suitable cell, or an empty list
+            when no such cell exists.
+        """
         for count_line, i in enumerate(tab_line):
             for j in tab_col:
                 if (
@@ -183,6 +255,20 @@ class Walker:
     def is_around_drawing(
         self, pos: int, check: Literal["line", "col"]
     ) -> bool:
+        """Return whether *pos* falls in the rows or columns occupied
+        by the drawing.
+
+        Used to avoid starting the walker inside the decorative centrepiece.
+
+        Args:
+            pos: Row index (when *check* is ``"line"``) or column index
+                (when *check* is ``"col"``).
+            check: Dimension to test — ``"line"`` or ``"col"``.
+
+        Returns:
+            ``False`` if the maze is too small for the drawing.
+            Otherwise ``True`` when *pos* overlaps the drawing region.
+        """
         if not self.maze.can_draw_42():
             return False
         line_draw = len(self.maze.drawing)
@@ -202,9 +288,15 @@ class Walker:
         return False
 
     def walk_and_fill(self) -> None:
-        """travel in the maze, when an unexplored cell is encountered,
-        draw a random path"""
+        """Drive the full random-walk generation until every cell is carved.
 
+        Picks a random starting cell outside the drawing region, then
+        loops: when the walker has no unexplored neighbours it calls
+        ``find_incomplete_cell`` to teleport to the next workable position.
+        Continues until ``nb_cell_to_fill`` reaches 1 (last cell is handled
+        implicitly).  Prints the maze to the terminal at each step when
+        ``config.animate_generation`` is ``True``.
+        """
         if self.maze.config.animate_generation:
             print("\033c", end="")
         if self.nb_cell_to_fill == 0:

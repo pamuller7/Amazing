@@ -163,3 +163,4 @@ Dijkstra : https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra
 AI used mostly for the building prompt: 
 - peotry run commade
 - ./venv/bin/python3 -m poetry install [Errno 2] No such file or directory: 'python'
+- for adding the PEP 257 docstrings

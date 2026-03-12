@@ -2,7 +2,30 @@ from mazegen.maze import Maze
 
 
 class SolveMaze:
-    def __init__(self, maze: Maze):
+    """Solve a ``Maze`` and expose the shortest entry-to-exit path.
+
+    On construction a Dijkstra distance matrix (``mat_star``) is built
+    from the exit cell outward.  ``output_shortest_way`` then greedily
+    walks from the entry towards decreasing distance values to reconstruct
+    the path.
+
+    Attributes:
+        maze: The ``Maze`` instance being solved.
+        entry: ``[line, col]`` of the entry cell.
+        exit: ``[line, col]`` of the exit cell.
+        pos_line: Current row index used during traversal.
+        pos_col: Current column index used during traversal.
+        explored: List of ``[line, col]`` positions visited so far.
+        is_in_bound: Convenience alias for ``maze.is_in_bound``.
+        mat_star: The Dijkstra distance matrix (distances from the exit).
+    """
+
+    def __init__(self, maze: Maze) -> None:
+        """Initialise the solver and build the Dijkstra distance matrix.
+
+        Args:
+            maze: The fully generated ``Maze`` to solve.
+        """
         self.maze = maze
         self.entry = [self.maze.config.entry[1], self.maze.config.entry[0]]
         self.exit = [self.maze.config.exit[1], self.maze.config.exit[0]]
@@ -13,10 +36,12 @@ class SolveMaze:
         self.mat_star = self.djikstra_matrix()
 
     def travel_in_maze(self, dir: int) -> None:
-        """Take an int (north 0b0111, south 0b1101 etc...) and change the pos
-        of self
-            dir: int = direction (north, south etc...)"""
+        """Advance ``pos_line`` / ``pos_col`` one step in direction *dir*.
 
+        Args:
+            dir: Direction bitmask (``maze.north``, ``maze.south``,
+                ``maze.east``, or ``maze.west``).
+        """
         if dir == self.maze.north:
             self.pos_line -= 1
         elif dir == self.maze.south:
@@ -27,10 +52,16 @@ class SolveMaze:
             self.pos_col += 1
 
     def decomp_cell(self, cell: int) -> list[int]:
-        """tells which walls of the current cell is open
-        cell: int = an argument of the maze (ex: maze[line][col])
-        --> Usefull to know wich way is open and ok to moove"""
+        """Return the list of open-passage directions for a raw cell value.
 
+        A direction is considered open when its corresponding wall bit is 0.
+
+        Args:
+            cell: Raw integer value from ``maze.maze[line][col]``.
+
+        Returns:
+            List of direction bitmasks for every passage that is open.
+        """
         cell_open = []
         if cell & 1 == 0:
             cell_open.append(self.maze.north)
@@ -43,9 +74,16 @@ class SolveMaze:
         return cell_open
 
     def djikstra_matrix(self) -> list[list[int]]:
-        """Create a new matrix, describing the distance of maze's cell
-        from the exit."""
+        """Build and return the Dijkstra distance matrix from the exit.
 
+        Initialises every cell with the sentinel value
+        ``width * height`` (unreachable), sets the exit to 0, and performs
+        a BFS that propagates shortest distances through open passages.
+
+        Returns:
+            A ``height × width`` matrix where each entry is the minimum
+            number of steps needed to reach the exit from that cell.
+        """
         mat_star = [
             [
                 self.maze.config.width * self.maze.config.height
@@ -74,9 +112,19 @@ class SolveMaze:
         return mat_star
 
     def output_shortest_way(self) -> str:
-        """Travel in the matrix created by the djikstra algo, and output the
-        direction taken by the solver to link the entry to the exit."""
+        """Trace the shortest path and return it as a cardinal-direction
+        string.
 
+        Starting from the entry, greedily moves to the neighbour whose
+        distance in ``mat_star`` is exactly one less than the current
+        cell, marking each visited cell in the maze for rendering (bits 5
+        and 6).  Optionally streams each step to the terminal when
+        ``config.animate_shortest_way`` is ``True``.
+
+        Returns:
+            A string of `'N'`, `'S'`, `'E'`, `'W'` characters
+            describing each step of the solution, followed by a newline.
+        """
         if self.maze.config.animate_shortest_way:
             print("\033c", end="")
         way = ""
