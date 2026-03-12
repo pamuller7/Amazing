@@ -179,9 +179,6 @@ DRAWING= str (Default 42), to choose a different drawing in the maze drawings av
 INTERACTIVE = main only
 
 
-### additional features
-
-
 ## Resources
 
 Kurskal : https://fr.wikipedia.org/wiki/Algorithme_de_Kruskal
