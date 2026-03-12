@@ -103,27 +103,48 @@ the makefile will create a venv with poetry and run the program in poetry.
 
 
 ### How to reuse the package
-```
-from mazegen.maze import MazeGenerator
-from mazegen.parse import CheckedConfig
-from mazegen.find_way import SolveMaze 
-conf = {											
-            "width": 20,								|
-            "height": 20,								|
-            "entry": (9, 9),							|
-            "exit": (0, 0),								| a dict stocking the mandatory informations. careful, here the flag interactive will not be detected
-            "output_file": "output_maze.txt",			|
-            "perfect": True,							|
-            "alt": True,								|
-            "animate_generation": False,				|
-            "theme": "red"								|
-}													
-conf = CheckedConfig(**conf)							| CheckedConfig checks if the keys are valid and returns a checkedconfig object, necessary for MazeGenerator.
-generated_maze = MazeGenerator(conf)								| generated_maze is the object stocking all the generated maze (generated_maze.maze will be the binary maze)
-generated_maze.print_maze()                             | Display the maze on the terminal
 
-proc = SolveMaze(generated_maze).output_shortest_way()	| Once the maze is initialised, output shortest way will return the directions you must follow to get from entry to exit
-print(proc)
+Example:
+```from mazegen import MazeGenerator, SolveMaze, CheckedConfig
+conf = {
+            "width": 20,
+            "height": 20,
+            "entry": (9, 9),
+            "exit": (0, 0),
+            "output_file": "output_maze.txt",
+            "perfect": True,
+            "alt": True,
+            "animate_generation": False,
+            "theme": "red"
+}
+conf = CheckedConfig(**conf)
+lab = MazeGenerator(conf)
+#lab.print_maze()
+#lab.print_maze("1")
+
+```
+
+Explanation:
+```
+from mazegen import MazeGenerator, CheckedConfig
+conf = {
+            "width": 20,                                          |
+            "height": 20,                                         |
+            "entry": (9, 9),                                      |
+            "exit": (0, 0),                                       |
+            "output_file": "output_maze.txt",                     | a dict stocking the mandatory informations. careful, here the flag interactive will not be detected
+            "perfect": True,                                      |
+            "alt": True,                                          |
+            "animate_generation": False,                          |
+            "theme": "red"                                        |
+}
+conf = CheckedConfig(**conf)                                      | CheckedConfig checks if the keys are valid and returns a checkedconfig object, necessary for MazeGenerator.
+
+lab = MazeGenerator(conf)                                         | generated_maze is the object stocking all the generated maze infos
+                                                                  | (generated_maze.maze will be the binary maze) and the output.txt is printed
+
+#lab.print_maze()                                                 | Display the maze on the terminal
+#lab.print_maze("1")                                              | Display the maze and the shortes path on terminal
 ```
 
 
