@@ -65,9 +65,7 @@ def handle_parse_one(maze: Maze, options: list, user_input: int) -> bool:
     return True
 
 
-def print_header(
-    maze: Maze, generation_time: float, solving_time: float
-) -> None:
+def print_header(maze: Maze) -> None:
     """Clear the terminal and print the run summary header.
 
     Displays the seed, alt flag, perfect flag, and the time taken to
@@ -89,14 +87,9 @@ def print_header(
     print(f"Seed used: {maze.config.seed}")
     print(f"Alt: {maze.config.alt}")
     print(f"Perfect: {maze.config.perfect}")
-    print(f"Program {animation}took:")
-    print(f"{generation_time} secondes to generate the maze")
-    print(f"{solving_time} secondes to solve it")
 
 
-def handle_interaction(
-    maze: Maze, generation_time: float, solving_time: float
-) -> bool:
+def handle_interaction(maze: Maze) -> bool:
     """Run one iteration of the interactive terminal menu.
 
     Prints the maze, then enters a loop offering the user choices to
@@ -111,7 +104,7 @@ def handle_interaction(
         ``True`` if the caller should regenerate the maze with the
         (possibly updated) config; ``False`` if the user chose to quit.
     """
-    print_header(maze, generation_time, solving_time)
+    print_header(maze)
     count_path = 0
     if maze.config.animate_shortest_way:
         count_path += 1
@@ -212,20 +205,9 @@ def main() -> None:
         config.seed = hex(random.randint(16**16, 16**17))
     while True:
         random.seed(config.seed)
-        x = time()
         maze = Maze(config)
-        generation_time = time() - x
-        content = maze.print_maze("hex")
-        x = time()
-        solver = SolveMaze(maze)
-        content += f"Entry: {config.entry}\nExit: {config.exit}\n"
-        content += solver.output_shortest_way()
-        solving_time = time() - x
-        with open(maze.config.output_file, "w") as f:
-            f.write(content)
         if maze.config.interactive and handle_interaction(
-            maze, generation_time, solving_time
-        ):
+            maze):
             continue
         return
 

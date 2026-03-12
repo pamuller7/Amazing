@@ -27,7 +27,7 @@ lint: install
 	-./venv/bin/python3 -m poetry run mypy mazegen/ main.py --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
 build: install
-	./venv/bin/python3 -m build --wheel --outdir dist/
+	./venv/bin/python3 -m poetry build
 
 lint-strict: install
 	-./venv/bin/python3 -m poetry run flake8 mazegen/ main.py

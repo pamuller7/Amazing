@@ -54,6 +54,7 @@ class Maze:
         """
         from mazegen.brutal_path import Walker
         from mazegen.kruskal import Kruskal
+        from mazegen.find_way import SolveMaze
 
         self.config = config
         self.north: int = 0b1110
@@ -70,6 +71,13 @@ class Maze:
         else:
             walk = Walker(self)
             walk.walk_and_fill()
+        content: str = self.print_maze("hex")
+        content += f"Entry: {config.entry}\nExit: {config.exit}\n"
+        solver = SolveMaze(self)
+        content += solver.output_shortest_way()
+        with open(self.config.output_file, "w") as f:
+            f.write(content)
+        
 
     def at(self, pos: Vector2) -> int:
         """Return the raw cell value at *pos*.
