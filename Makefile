@@ -28,12 +28,12 @@ clean:
 	-rm dist -r
 
 lint: install
-	-./venv/bin/python3 -m poetry run flake8 mazegen/ a_maze_ing.py 
-	-./venv/bin/python3 -m poetry run mypy mazegen/ a_maze_ing.py --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
+	-./venv/bin/python3 -m poetry run flake8 mazegen/ tests/ a_maze_ing.py 
+	-./venv/bin/python3 -m poetry run mypy mazegen/ tests/ a_maze_ing.py --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
 build: install
 	./venv/bin/python3 -m poetry build
 
 lint-strict: install
 	-./venv/bin/python3 -m poetry run flake8 mazegen/ a_maze_ing.py
-	-./venv/bin/python3 -m poetry run mypy --strict mazegen/ a_maze_ing.py
+	-./venv/bin/python3 -m poetry run mypy --strict mazegen/ tests/ a_maze_ing.py
