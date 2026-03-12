@@ -35,5 +35,5 @@ build: install
 	./venv/bin/python3 -m poetry build
 
 lint-strict: install
-	-./venv/bin/python3 -m poetry run flake8 mazegen/ a_maze_ing.py
+	-./venv/bin/python3 -m poetry run flake8 mazegen/ tests/ a_maze_ing.py
 	-./venv/bin/python3 -m poetry run mypy --strict mazegen/ tests/ a_maze_ing.py
