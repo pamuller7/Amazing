@@ -67,6 +67,13 @@ The last line of the example are the directions to follow to go to the exit from
 
 ### Kurskal algo
 
+Here's how the algorithm works:
+- Create one set (disjoint) per cell
+- for every wall in the labyrinth in a random order, if the cell it splits are part of the same set, join them and break the wall.
+
+To create an imperfect maze, we iterate on all column choosing one random line to choose candidates to break,
+if we didnt find any we do it again.
+
 ### Brutal
 The procedure here is simpler. We start for a random position in the maze and draw a random path, breaking through the unexplored cells, until it's in a dead end (sourrounded by the mazes limite or an other path), and repeat the execution for every incomplete cells.
 this guarantees a perfect maze, as every path are dead ends, linked together (think it as a tree).
