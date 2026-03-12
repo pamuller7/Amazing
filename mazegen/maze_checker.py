@@ -1,9 +1,9 @@
-from mazegen.maze import Maze
+from mazegen.maze import MazeGenerator
 from mazegen.find_way import SolveMaze
 
 
 def check_is_accessible(
-    pos: list, mat_dij: list[list[int]], maze: Maze
+    pos: list, mat_dij: list[list[int]], maze: MazeGenerator
 ) -> bool:
     """Return whether the cell at *pos* can be reached from the exit.
 
@@ -28,7 +28,9 @@ def check_is_accessible(
     return True
 
 
-def check_is_open_area(pos: list, maze: Maze, solvemaze: SolveMaze) -> bool:
+def check_is_open_area(
+    pos: list, maze: MazeGenerator, solvemaze: SolveMaze
+) -> bool:
     """Return whether *pos* is the top-left corner of a fully open 3x3 area.
 
     An "open area" is a 3x3 block of cells where every internal wall has
@@ -104,7 +106,7 @@ def check_is_open_area(pos: list, maze: Maze, solvemaze: SolveMaze) -> bool:
 
 
 def check_have_the_same_open_wall(
-    pos: list, maze: Maze, solvemaze: SolveMaze
+    pos: list, maze: MazeGenerator, solvemaze: SolveMaze
 ) -> str:
     """Check that every open wall of the cell at *pos* is reciprocated.
 
@@ -176,7 +178,7 @@ def check_have_the_same_open_wall(
     return ""
 
 
-def check_valid_maze(maze: Maze, solvemaze: SolveMaze) -> list[str]:
+def check_valid_maze(maze: MazeGenerator, solvemaze: SolveMaze) -> list[str]:
     """Run all three validity checks on every cell of the maze.
 
     Combines ``check_is_accessible``, ``check_is_open_area``, and

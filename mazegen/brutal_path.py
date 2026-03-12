@@ -25,9 +25,9 @@ class Walker:
         nb_cell_to_fill: Number of cells that still need to be carved.
     """
 
-    from mazegen.maze import Maze
+    from mazegen.maze import MazeGenerator
 
-    def __init__(self, maze: Maze) -> None:
+    def __init__(self, maze: MazeGenerator) -> None:
         """Initialise the walker for a given maze.
 
         Args:

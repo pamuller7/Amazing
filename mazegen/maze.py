@@ -6,7 +6,7 @@ from mazegen.graphics import drawings, themes, Colors, Theme
 import time
 
 
-class Maze:
+class MazeGenerator:
     """A rectangular grid maze stored as a bit-encoded integer matrix.
 
     Each cell is an integer whose lower four bits represent the four walls

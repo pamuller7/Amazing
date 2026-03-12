@@ -1,6 +1,6 @@
 from unittest import TestCase
 import mazegen.parse as parse
-from mazegen.maze import Maze
+from mazegen.maze import MazeGenerator
 from mazegen.kruskal import Kruskal
 from mazegen.brutal_path import Walker
 from mazegen.maze_checker import check_valid_maze
@@ -32,7 +32,7 @@ class ValidityTests(TestCase):
                         c.animate_generation = False
                         c.animate_shortest_way = False
                         c.perfect = perfect
-                        maze = Maze(c)
+                        maze = MazeGenerator(c)
                         if alt:
                             Kruskal.kruskal(maze)
                         else:

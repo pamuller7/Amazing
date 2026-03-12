@@ -1,4 +1,4 @@
-from mazegen.maze import Maze
+from mazegen.maze import MazeGenerator
 
 
 class SolveMaze:
@@ -20,7 +20,7 @@ class SolveMaze:
         mat_star: The Dijkstra distance matrix (distances from the exit).
     """
 
-    def __init__(self, maze: Maze) -> None:
+    def __init__(self, maze: MazeGenerator) -> None:
         """Initialise the solver and build the Dijkstra distance matrix.
 
         Args:

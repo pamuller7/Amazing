@@ -95,10 +95,10 @@ class Kruskal:
     Optionally opens extra walls to create loops for imperfect mazes.
     """
 
-    from mazegen.maze import Maze
+    from mazegen.maze import MazeGenerator
 
     @staticmethod
-    def get_direction(maze: Maze, move: int) -> Vector2:
+    def get_direction(maze: MazeGenerator, move: int) -> Vector2:
         """Convert a direction bitmask to a unit ``Vector2`` offset.
 
         Args:
@@ -121,7 +121,7 @@ class Kruskal:
         return Vector2(0, 0)
 
     @staticmethod
-    def decomp_cell(maze: Maze, cell: int) -> list:
+    def decomp_cell(maze: MazeGenerator, cell: int) -> list:
         """Return the open-passage directions for a raw cell value.
 
         A direction is open when its wall bit is cleared (0).
@@ -145,7 +145,7 @@ class Kruskal:
         return cell_open
 
     @staticmethod
-    def kruskal(maze: Maze) -> None:
+    def kruskal(maze: MazeGenerator) -> None:
         """Generate passages in *maze* using randomised Kruskal's algorithm.
 
         Builds a disjoint-set forest over all cells, shuffles every

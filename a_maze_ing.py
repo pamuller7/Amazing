@@ -1,11 +1,13 @@
-from mazegen.maze import Maze
+from mazegen.maze import MazeGenerator
 import mazegen.parse as parsing
 import random
 import sys
 from typing import Any
 
 
-def handle_parse_one(maze: Maze, options: list, user_input: int) -> bool:
+def handle_parse_one(
+    maze: MazeGenerator, options: list, user_input: int
+) -> bool:
     """Apply a single interactive configuration change to the maze.
 
     Prompts the user for a new value for the selected configuration key,
@@ -63,7 +65,7 @@ def handle_parse_one(maze: Maze, options: list, user_input: int) -> bool:
     return True
 
 
-def print_header(maze: Maze) -> None:
+def print_header(maze: MazeGenerator) -> None:
     """Clear the terminal and print the run summary header.
 
     Displays the seed, alt flag, perfect flag, and the time taken to
@@ -80,7 +82,7 @@ def print_header(maze: Maze) -> None:
     print(f"Perfect: {maze.config.perfect}")
 
 
-def handle_interaction(maze: Maze) -> bool:
+def handle_interaction(maze: MazeGenerator) -> bool:
     """Run one iteration of the interactive terminal menu.
 
     Prints the maze, then enters a loop offering the user choices to
@@ -195,7 +197,7 @@ def main() -> None:
     while True:
         random.seed(config.seed)
         try:
-            maze = Maze(config)
+            maze = MazeGenerator(config)
         except ValueError as e:
             print(f"Maze error: {e}")
             return
